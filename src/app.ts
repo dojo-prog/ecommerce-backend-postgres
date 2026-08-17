@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 
 import authRouter from "./routers/auth.routes";
 import addressRouter from "./routers/address.routes";
+import storeRouter from "./routers/store.routes";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cookieParser());
 // Routers
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/addresses", addressRouter);
+app.use("/api/v1/store", storeRouter);
 
 // Error Handler
 app.use(errorMiddleware);
