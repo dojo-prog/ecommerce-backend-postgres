@@ -8,6 +8,7 @@ const initDb = async () => {
       username text NOT NULL UNIQUE,
       email text NOT NULL UNIQUE,
       password_hash text NOT NULL,
+      role text NOT NULL DEFAULT 'customer',
       created_at timestamptz NOT NULL DEFAULT now(),
       updated_at timestamptz NOT NULL DEFAULT now()
     );
