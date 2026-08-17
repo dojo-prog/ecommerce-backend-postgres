@@ -30,7 +30,7 @@ const OrderEntitySchema = z.object({
   shipping_fee_cents: NonNegativeIntSchema,
   shipping_distance_meters: NonNegativeIntSchema,
   total_cents: NonNegativeIntSchema,
-  timestampts: z.object({
+  timestamps: z.object({
     paid_at: IsoDatetimeSchema.nullable(),
     processed_at: IsoDatetimeSchema.nullable(),
     shipped_at: IsoDatetimeSchema.nullable(),
