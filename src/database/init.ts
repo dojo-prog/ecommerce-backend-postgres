@@ -174,6 +174,9 @@ const initDb = async () => {
 
     CREATE INDEX IF NOT EXISTS idx_payments_order_id
     ON payments (order_id);
+
+    CREATE UNIQUE INDEX one_store_only
+    ON stores ((true));
     `,
   );
 };
