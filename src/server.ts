@@ -2,6 +2,7 @@ import http from "http";
 import checkDbConn from "./database/check";
 import app from "./app";
 import ENV from "./config/env";
+import "./database/init";
 
 const startServer = () => {
   try {
