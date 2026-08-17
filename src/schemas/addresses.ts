@@ -40,6 +40,8 @@ export const AddressLineSchema = z
   .min(1, { message: "Address line / street address is required" })
   .max(240, "Address line cannot exceed 240 characters");
 
+export const IsDefaultSchema = z.boolean().default(false);
+
 // =======================================
 // DATABASE ENTITY SCHEMA
 // =======================================
@@ -54,6 +56,7 @@ export const AddressEntitySchema = z.object({
   address_line: AddressLineSchema,
   latitude: LatitudeSchema,
   longitude: LongitudeSchema,
+  is_default: IsDefaultSchema,
   created_at: IsoDatetimeSchema,
   updated_at: IsoDatetimeSchema,
 });
