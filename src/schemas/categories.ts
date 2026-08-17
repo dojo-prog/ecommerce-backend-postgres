@@ -33,7 +33,11 @@ const CategoryEntitySchema = z.object({
 // REQ PARAMS SCHEMA
 // =======================================
 
-export const CategoryParamsSchema = z.object({
+export const CategorySlugParamsSchema = z.object({
+  categorySlug: SlugSchema,
+});
+
+export const CategoryIdParamsSchema = z.object({
   categoryId: UUIDSchema,
 });
 
