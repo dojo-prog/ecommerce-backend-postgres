@@ -15,8 +15,8 @@ interface NominatimResult {
 }
 
 interface GeocodeAddressResult {
-  latitude: number | undefined;
-  longitude: number | undefined;
+  latitude: number;
+  longitude: number;
 }
 
 const geocodeAddress = async (
