@@ -24,6 +24,7 @@ const initDb = async () => {
       address_line text NOT NULL,
       latitude double precision NOT NULL,
       longitude double precision NOT NULL,
+      is_default boolean NOT NULL DEFAULT false,
       created_at timestamptz NOT NULL DEFAULT now(),
       updated_at timestamptz NOT NULL DEFAULT now()
     );
