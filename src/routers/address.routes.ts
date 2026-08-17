@@ -11,6 +11,7 @@ import {
   deleteAddress,
   getAddressById,
   getUserAddresses,
+  setToDefault,
   updateAddress,
 } from "../controllers/address.controller";
 
@@ -31,5 +32,11 @@ router
     updateAddress,
   )
   .delete(validate({ params: AddressParamsSchema }), deleteAddress);
+
+router.patch(
+  "/:addressId/default",
+  validate({ params: AddressParamsSchema }),
+  setToDefault,
+);
 
 export default router;
