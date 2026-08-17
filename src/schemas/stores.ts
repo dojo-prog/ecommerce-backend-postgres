@@ -3,12 +3,22 @@ import { AddressBaseInputSchema, AddressEntitySchema } from "./addresses";
 import { UpdateResultSchema, UUIDSchema } from "./common";
 
 // =======================================
+// REUSABLE FIELDS
+// =======================================
+
+export const StoreNameSchema = z
+  .string()
+  .trim()
+  .min(1, { message: "Store name is required" })
+  .max(100, { message: "Store name cannot exceed 100 characters" });
+
+// =======================================
 // DATABASE ENTITY SCHEMA
 // =======================================
 
 export const StoreEntitySchema = AddressEntitySchema.omit({
   user_id: true,
-}).extend({ main: z.boolean().default(false) });
+}).extend({ name: StoreNameSchema });
 
 // =======================================
 // REQ PARAMS SCHEMA
@@ -22,7 +32,9 @@ export const StoreParamsSchema = z.object({
 // REQ BODY SCHEMA
 // =======================================
 
-const StoreBaseInputSchema = AddressBaseInputSchema;
+const StoreBaseInputSchema = AddressBaseInputSchema.extend({
+  name: StoreNameSchema,
+});
 
 export const CreateStoreInputSchema = StoreBaseInputSchema;
 export const UpdateStoreInputSchema = StoreBaseInputSchema;
