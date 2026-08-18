@@ -5,7 +5,7 @@ import {
   CreateCategoryPayload,
 } from "../schemas/categories";
 import buildFilterQueries from "../utils/query-builder/buildFilterQueries";
-import buildInserQueries from "../utils/query-builder/buildInsertQueries";
+import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
 export const find = async (
@@ -62,7 +62,7 @@ export const findBySlug = async (categorySlug: string): Promise<Category> => {
 export const add = async (
   payload: CreateCategoryPayload & { slug: string },
 ) => {
-  const { columnsStr, placeholdersStr, values } = buildInserQueries(payload);
+  const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
   const { rows } = await pool.query(
     `

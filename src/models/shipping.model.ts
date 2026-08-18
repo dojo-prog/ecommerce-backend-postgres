@@ -1,6 +1,6 @@
 import pool from "../database/db";
 import { CreateShippingPayload, Shipping } from "../schemas/shipping";
-import buildInserQueries from "../utils/query-builder/buildInsertQueries";
+import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
 export const find = async (): Promise<Shipping> => {
@@ -16,7 +16,7 @@ export const find = async (): Promise<Shipping> => {
 export const create = async (
   payload: CreateShippingPayload,
 ): Promise<Shipping> => {
-  const { columnsStr, placeholdersStr, values } = buildInserQueries(payload);
+  const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
   const { rows } = await pool.query(
     `

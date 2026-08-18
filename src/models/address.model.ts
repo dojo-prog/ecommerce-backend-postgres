@@ -1,6 +1,6 @@
 import pool from "../database/db";
 import { CreateAddressPayload, UserAddress } from "../schemas/addresses";
-import buildInserQueries from "../utils/query-builder/buildInsertQueries";
+import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
 export const find = async (userId: string): Promise<UserAddress[]> => {
@@ -34,7 +34,7 @@ export const findById = async (
 export const add = async (
   payload: CreateAddressPayload & { user_id: string },
 ) => {
-  const { columnsStr, placeholdersStr, values } = buildInserQueries(payload);
+  const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
   const { rows } = await pool.query(
     `

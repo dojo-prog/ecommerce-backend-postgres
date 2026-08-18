@@ -1,6 +1,6 @@
 import pool from "../database/db";
 import { CreateStorePayload, Store } from "../schemas/stores";
-import buildInserQueries from "../utils/query-builder/buildInsertQueries";
+import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
 export const find = async (): Promise<Store> => {
@@ -16,7 +16,7 @@ export const find = async (): Promise<Store> => {
 export const create = async (
   payload: CreateStorePayload & { latitude: number; longitude: number },
 ): Promise<Store> => {
-  const { columnsStr, placeholdersStr, values } = buildInserQueries(payload);
+  const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
   const { rows } = await pool.query(
     `

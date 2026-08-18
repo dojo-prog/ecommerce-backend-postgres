@@ -4,7 +4,7 @@ interface BuildInsertQueriesResult {
   values: unknown[];
 }
 
-const buildInserQueries = (
+const buildInsertQueries = (
   payload: Record<string, unknown>,
 ): BuildInsertQueriesResult => {
   const columns: string[] = [];
@@ -28,4 +28,4 @@ const buildInserQueries = (
   };
 };
 
-export default buildInserQueries;
+export default buildInsertQueries;

@@ -1,7 +1,7 @@
 import { truncateTable } from "../utils";
 import generateSlug from "../../src/utils/generateSlug";
 import pool from "../../src/database/db";
-import buildInserQueries from "../../src/utils/query-builder/buildInsertQueries";
+import buildInsertQueries from "../../src/utils/query-builder/buildInsertQueries";
 import mockCategories from "./data";
 
 const seedCategories = async () => {
@@ -13,7 +13,7 @@ const seedCategories = async () => {
   for (const c of mockCategories) {
     const slug = generateSlug(c.name);
 
-    const { columnsStr, placeholdersStr, values } = buildInserQueries({
+    const { columnsStr, placeholdersStr, values } = buildInsertQueries({
       ...c,
       slug,
     });
