@@ -61,3 +61,7 @@ export const LongitudeSchema = z
   .number()
   .min(-180, { message: "Longitude must be at least -180" })
   .max(180, { message: "Longitude cannot exceed 180" });
+
+export const ImageUrlSchema = z.string().url({ message: "Invalid URL format" });
+
+export const ImagePublicIdSchema = z.string().min(1);
