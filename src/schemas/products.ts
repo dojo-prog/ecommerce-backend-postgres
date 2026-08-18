@@ -41,7 +41,7 @@ export const CurrencySchema = z
   .length(3, { message: "Currency must be a 3-letter code" })
   .toUpperCase();
 
-export const WeightGramsSchema = z
+export const WeightGramsSchema = z.coerce
   .number()
   .int({ message: "Weight must be a whole number" })
   .nonnegative({ message: "Weight cannot be negative" });
@@ -106,15 +106,20 @@ export const ProductParamsSchema = z.object({
 // REQ QUERY SCHEMA
 // =======================================
 
-export const ProductQuerySchema = z.object({
-  ...PaginationQuerySchema.shape,
-  search: SearchQuerySchema,
+export const ProductSpecificQuerySchema = z.object({
   category: SlugSchema.optional(),
   minPrice: NonNegativeIntSchema.optional(),
   maxPrice: NonNegativeIntSchema.optional(),
   inStock: z.coerce.boolean().optional(),
-  sort: ProductAllowableSort.optional(),
 });
+
+export const ProductQuerySchema = z
+  .object({
+    ...PaginationQuerySchema.shape,
+    search: SearchQuerySchema,
+    sort: ProductAllowableSort.optional(),
+  })
+  .merge(ProductSpecificQuerySchema);
 
 // =======================================
 // REQ BODY SCHEMA
@@ -133,6 +138,15 @@ const ProductBaseInputSchema = z.object({
 export const CreateProductInputSchema = ProductBaseInputSchema;
 
 export const UpdateProductInputSchema = ProductBaseInputSchema;
+
+// =======================================
+// PAYLOAD SCHEMA
+// =======================================
+
+export const CreateProductFinalPayloadSchema = ProductBaseInputSchema.extend({
+  thumbnail_url: ImageUrlSchema.optional(),
+  thumbnail_public_id: ImagePublicIdSchema.optional(),
+});
 
 // =======================================
 // RESULT SCHEMA
@@ -157,9 +171,16 @@ const UpdateProductResultSchema = z
 export type Product = z.infer<typeof ProductEntitySchema>;
 export type ProductRelations = z.infer<typeof ProductRelationsSchema>;
 
+export type ProductSpecificQueryPayload = z.infer<
+  typeof ProductSpecificQuerySchema
+>;
 export type ProductQueryPayload = z.infer<typeof ProductQuerySchema>;
 export type CreateProductPayload = z.infer<typeof CreateProductInputSchema>;
 export type UpdateProductPayload = z.infer<typeof UpdateProductInputSchema>;
+
+export type CreateProductFinalPayload = z.infer<
+  typeof CreateProductFinalPayloadSchema
+>;
 
 export type ProductQueryResult = z.infer<typeof ProductQueryResultSchema>;
 export type UpdateProductResult = z.infer<typeof UpdateProductResultSchema>;
