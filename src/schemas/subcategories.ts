@@ -31,6 +31,18 @@ const SubcategoryEntitySchema = z.object({
 });
 
 // =======================================
+// REQ PARAMS SCHEMA
+// =======================================
+
+export const SubcategoryIdParamsSchema = z.object({
+  subcategoryId: UUIDSchema,
+});
+
+export const SubcategorySlugParamsSchema = z.object({
+  subcategorySlug: SlugSchema,
+});
+
+// =======================================
 // REQ QUERY SCHEMA
 // =======================================
 
