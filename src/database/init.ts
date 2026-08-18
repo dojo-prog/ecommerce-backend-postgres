@@ -77,7 +77,9 @@ const initDb = async () => {
       description text NOT NULL, 
       price_cents int NOT NULL CHECK (price_cents >= 0),
       currency text NOT NULL DEFAULT 'PHP',
-      weight_grams int NOT NULL CHECK (weight_grams >= 0), 
+      weight_grams int NOT NULL CHECK (weight_grams >= 0),
+      thumbnail_url text,
+      thumbnail_public_id text,
       is_active boolean NOT NULL DEFAULT false,
       created_at timestamptz NOT NULL DEFAULT now(),
       updated_at timestamptz NOT NULL DEFAULT now()

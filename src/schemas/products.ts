@@ -8,6 +8,8 @@ import {
   SlugSchema,
   UpdateResultSchema,
   UUIDSchema,
+  ImageUrlSchema,
+  ImagePublicIdSchema,
 } from "./common";
 import { CategoryNameSchema } from "./categories";
 import { SubcategoryNameSchema } from "./subcategories";
@@ -71,6 +73,8 @@ export const ProductEntitySchema = z.object({
   price_cents: PriceCentsSchema,
   currency: CurrencySchema,
   weight_grams: WeightGramsSchema,
+  thumbnail_url: ImageUrlSchema,
+  thumbnail_public_id: ImagePublicIdSchema,
   is_active: IsActiveSchema,
   created_at: IsoDatetimeSchema,
   updated_at: IsoDatetimeSchema,
