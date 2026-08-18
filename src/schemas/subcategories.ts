@@ -5,6 +5,7 @@ import {
   PaginationResultSchema,
   SearchQuerySchema,
   SlugSchema,
+  UpdateResultSchema,
   UUIDSchema,
 } from "./common";
 
@@ -73,6 +74,11 @@ export const SubcategoryQueryResultSchema = z
   })
   .extend({ pagination: PaginationResultSchema });
 
+export const UpdateSubcategoryResultSchema = z.object({
+  subcategory: SubcategoryEntitySchema,
+  ...UpdateResultSchema.shape,
+});
+
 // =======================================
 // TYPES
 // =======================================
@@ -89,4 +95,7 @@ export type UpdateSubcategoryPayload = z.infer<
 
 export type SubcategoryQueryResult = z.infer<
   typeof SubcategoryQueryResultSchema
+>;
+export type UpdateSubcategoryResult = z.infer<
+  typeof UpdateSubcategoryResultSchema
 >;
