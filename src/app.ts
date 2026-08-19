@@ -9,6 +9,7 @@ import shippingRouter from "./routers/shipping.routes";
 import categoryRouter from "./routers/category.routes";
 import subcategoryRouter from "./routers/subcategory.routes";
 import productRouter from "./routers/product.routes";
+import inventoryRouter from "./routers/inventory.routes";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/v1/shipping", shippingRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/categories", subcategoryRouter);
 app.use("/api/v1/products", productRouter);
+app.use("/api/v1/products", inventoryRouter);
 
 // Error Handler
 app.use(errorMiddleware);
