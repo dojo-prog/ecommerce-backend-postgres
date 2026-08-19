@@ -3,8 +3,9 @@ import { truncateTable } from "../utils";
 import buildInsertQueries from "../../src/utils/query-builder/buildInsertQueries";
 import mockStore from "./data";
 import geocodeAddress from "../../src/integrations/nominatim/geocoding";
+import { PoolClient } from "pg";
 
-const seedStores = async () => {
+const seedStores = async (client: PoolClient) => {
   console.log("Starting store seed...");
 
   console.log("Truncating stores table...");
@@ -20,7 +21,7 @@ const seedStores = async () => {
 
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
-  await pool.query(
+  await client.query(
     `
     INSERT INTO stores (${columnsStr})
     VALUES (${placeholdersStr})

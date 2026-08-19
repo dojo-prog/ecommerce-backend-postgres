@@ -3,8 +3,9 @@ import { truncateTable } from "../utils";
 import mockSubcategories from "./data";
 import generateSlug from "../../src/utils/generateSlug";
 import buildInsertQueries from "../../src/utils/query-builder/buildInsertQueries";
+import { PoolClient } from "pg";
 
-const seedSubcategories = async () => {
+const seedSubcategories = async (client: PoolClient) => {
   console.log("Starting subcategories seed...");
 
   console.log("Truncating subcategories table...");
@@ -18,7 +19,7 @@ const seedSubcategories = async () => {
     if (categoryIdMap[sc.category_name]) {
       category_id = categoryIdMap[sc.category_name];
     } else {
-      const { rows } = await pool.query(
+      const { rows } = await client.query(
         `
         SELECT id FROM categories 
         WHERE name = $1
@@ -41,7 +42,7 @@ const seedSubcategories = async () => {
 
     const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
-    await pool.query(
+    await client.query(
       `
       INSERT INTO subcategories (${columnsStr})
       VALUES (${placeholdersStr})

@@ -3,8 +3,9 @@ import pool from "../../src/database/db";
 import { truncateTable } from "../utils";
 import mockUsers from "./data";
 import buildInsertQueries from "../../src/utils/query-builder/buildInsertQueries";
+import { PoolClient } from "pg";
 
-const seedUsers = async () => {
+const seedUsers = async (client: PoolClient) => {
   console.log("\nStarting user seed...");
 
   console.log("Truncating users table...");
@@ -22,7 +23,7 @@ const seedUsers = async () => {
 
     const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
-    const { rows } = await pool.query(
+    const { rows } = await client.query(
       `
       INSERT INTO users (${columnsStr})
       VALUES (${placeholdersStr})
@@ -33,7 +34,7 @@ const seedUsers = async () => {
 
     const user_id = rows[0].id;
 
-    await pool.query(
+    await client.query(
       `
       INSERT INTO carts (user_id)
       VALUES ($1)

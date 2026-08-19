@@ -2,8 +2,9 @@ import pool from "../../src/database/db";
 import { truncateTable } from "../utils";
 import buildInsertQueries from "../../src/utils/query-builder/buildInsertQueries";
 import mockProducts from "./data";
+import { PoolClient } from "pg";
 
-const seedProducts = async () => {
+const seedProducts = async (client: PoolClient) => {
   console.log("Starting products seed...");
 
   console.log("Truncating products table...");
@@ -20,7 +21,7 @@ const seedProducts = async () => {
     if (subCatIdMap[subcategory_name]) {
       subcategory_id = subCatIdMap[subcategory_name];
     } else {
-      const { rows } = await pool.query(
+      const { rows } = await client.query(
         `
         SELECT id FROM subcategories
         WHERE name = $1
@@ -42,7 +43,7 @@ const seedProducts = async () => {
 
     const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
-    const { rows } = await pool.query(
+    const { rows } = await client.query(
       `
       INSERT INTO products (${columnsStr})
       VALUES (${placeholdersStr})
@@ -53,7 +54,7 @@ const seedProducts = async () => {
 
     const product_id = rows[0].id;
 
-    await pool.query(
+    await client.query(
       `
       INSERT INTO inventory (product_id, quantity)
       VALUES ($1, $2)

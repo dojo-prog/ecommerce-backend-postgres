@@ -3,8 +3,9 @@ import generateSlug from "../../src/utils/generateSlug";
 import pool from "../../src/database/db";
 import buildInsertQueries from "../../src/utils/query-builder/buildInsertQueries";
 import mockCategories from "./data";
+import { PoolClient } from "pg";
 
-const seedCategories = async () => {
+const seedCategories = async (client: PoolClient) => {
   console.log("Starting categories seed...");
 
   console.log("Truncating category table...");
@@ -18,7 +19,7 @@ const seedCategories = async () => {
       slug,
     });
 
-    await pool.query(
+    await client.query(
       `
       INSERT INTO categories(${columnsStr})
       VALUES (${placeholdersStr})
