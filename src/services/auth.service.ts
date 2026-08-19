@@ -14,6 +14,7 @@ import {
   generateRefreshToken,
 } from "../utils/auth/generateAuthTokens";
 import ENV from "../config/env";
+import { getOrCreateCart } from "../services/cart.service";
 
 export const register = async (
   payload: RegisterPayload,
@@ -42,6 +43,8 @@ export const register = async (
   };
 
   const user = await authModel.register(finalPayload);
+
+  await getOrCreateCart(user.id);
 
   return {
     user,
