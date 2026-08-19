@@ -76,6 +76,10 @@ export const UpdateOrderStatusSchema = z.object({
 // PAYLOAD SCHEMA
 // =======================================
 
+export const CheckoutPayloadSchema = z.object({
+  address_id: UUIDSchema,
+});
+
 export const CreateOrderPayloadSchema = z.object({
   user_id: UUIDSchema,
   subtotal_cents: NonNegativeIntSchema,
