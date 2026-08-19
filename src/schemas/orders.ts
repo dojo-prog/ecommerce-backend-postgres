@@ -4,9 +4,11 @@ import {
   NonNegativeIntSchema,
   PaginationQuerySchema,
   PaginationResultSchema,
+  SearchQuerySchema,
   UpdateResultSchema,
   UUIDSchema,
 } from "./common";
+import { OrderItemEntitySchema } from "./order_items";
 
 // =======================================
 // ENUM SCHEMA
@@ -41,6 +43,10 @@ const OrderEntitySchema = z.object({
   updated_at: IsoDatetimeSchema,
 });
 
+const OrderWithItemsSchema = OrderEntitySchema.omit({ user_id: true }).extend({
+  items: z.array(OrderItemEntitySchema),
+});
+
 // =======================================
 // REQ PARAMS SCHEMA
 // =======================================
@@ -55,6 +61,7 @@ export const OrderParamsSchema = z.object({
 
 export const OrderQuerySchema = z.object({
   ...PaginationQuerySchema.shape,
+  search: SearchQuerySchema,
 });
 
 // =======================================
@@ -70,7 +77,12 @@ export const UpdateOrderStatusSchema = z.object({
 // =======================================
 
 export const CreateOrderPayloadSchema = z.object({
-  id: UUIDSchema,
+  user_id: UUIDSchema,
+  subtotal_cents: NonNegativeIntSchema,
+  tax_cents: NonNegativeIntSchema,
+  shipping_fee_cents: NonNegativeIntSchema,
+  shipping_distance_meters: NonNegativeIntSchema,
+  total_cents: NonNegativeIntSchema,
 });
 
 // =======================================
@@ -92,6 +104,7 @@ const UpdateOrderStatusResultSchema = z.object({
 // =======================================
 
 export type Order = z.infer<typeof OrderEntitySchema>;
+export type OrderWithItems = z.infer<typeof OrderWithItemsSchema>;
 
 export type OrderQueryPayload = z.infer<typeof OrderQuerySchema>;
 export type CreateOrderPayload = z.infer<typeof CreateOrderPayloadSchema>;
