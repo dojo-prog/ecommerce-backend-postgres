@@ -18,19 +18,22 @@ export const findById = async (productId: string): Promise<Inventory> => {
 export const add = async (
   productId: string,
   quantity: number,
-): Promise<void> => {
+): Promise<Inventory> => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries({
     product_id: productId,
     quantity,
   });
 
-  await pool.query(
+  const { rows } = await pool.query(
     `
     INSERT INTO inventory (${columnsStr})
     VALUES (${placeholdersStr})
+    RETURNING *
     `,
     values,
   );
+
+  return rows[0];
 };
 
 export const update = async (
