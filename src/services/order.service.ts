@@ -93,7 +93,7 @@ export const checkout = async (
     const cartItems = await cartItemModel.findByCartId(cart.id, client);
 
     if (cartItems.length === 0) {
-      throw new AppError(400, "Cannot checout with an empty cart");
+      throw new AppError(400, "Cannot checkout with an empty cart");
     }
 
     // =======================================
