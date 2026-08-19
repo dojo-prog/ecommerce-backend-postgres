@@ -11,6 +11,7 @@ import subcategoryRouter from "./routers/subcategory.routes";
 import productRouter from "./routers/product.routes";
 import inventoryRouter from "./routers/inventory.routes";
 import cartItemRouter from "./routers/cart_item.routes";
+import orderRouter from "./routers/order.routes";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/v1/categories", subcategoryRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/products", inventoryRouter);
 app.use("/api/v1/cart/items", cartItemRouter);
+app.use("/api/v1/orders", orderRouter);
 
 // Error Handler
 app.use(errorMiddleware);
