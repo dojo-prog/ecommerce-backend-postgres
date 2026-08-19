@@ -141,6 +141,8 @@ const initDb = async () => {
         ON DELETE CASCADE,
       product_id uuid REFERENCES products(id)
         ON DELETE SET NULL, 
+      product_name text NOT NULL, 
+      product_thumbnail_url text, 
       quantity int NOT NULL CHECK (quantity >= 0), 
       unit_price_cents int NOT NULL CHECK (unit_price_cents >= 0), 
       subtotal_cents int NOT NULL CHECK (subtotal_cents >= 0)

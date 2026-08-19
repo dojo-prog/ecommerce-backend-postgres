@@ -1,14 +1,19 @@
 import { z } from "zod";
-import { NonNegativeIntSchema, UUIDSchema } from "./common";
+import { ImageUrlSchema, NonNegativeIntSchema, UUIDSchema } from "./common";
+import { ProductNameSchema } from "./products";
 
 // =======================================
 // DATABASE ENTITY SCHEMA
 // =======================================
 
-const OrderItemEntitySchema = z.object({
+export const OrderItemEntitySchema = z.object({
   id: UUIDSchema,
   order_id: UUIDSchema,
-  product_id: UUIDSchema,
+  product_id: UUIDSchema.nullable(),
+
+  product_name: ProductNameSchema,
+  product_thumbnail_url: ImageUrlSchema.nullable(),
+
   quantity: NonNegativeIntSchema.default(1),
   unit_price_cents: NonNegativeIntSchema,
   subtotal_cents: NonNegativeIntSchema,
@@ -21,6 +26,8 @@ const OrderItemEntitySchema = z.object({
 const CreateOrderItemPayloadSchema = z.object({
   order_id: UUIDSchema,
   product_id: UUIDSchema,
+  product_name: ProductNameSchema,
+  product_thumbnail_url: ImageUrlSchema.optional().nullable(),
   quantity: NonNegativeIntSchema,
   unit_price_cents: NonNegativeIntSchema,
   subtotal_cents: NonNegativeIntSchema,
