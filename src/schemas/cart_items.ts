@@ -66,7 +66,7 @@ export const CartItemParamsSchema = z.object({
 // =======================================
 
 export const AddToCartInputSchema = z.object({
-  productId: UUIDSchema,
+  product_id: UUIDSchema,
   quantity: CartItemQuantitySchema.optional().default(1),
 });
 
