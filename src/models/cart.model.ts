@@ -4,7 +4,7 @@ import { Cart } from "../schemas/cart";
 export const findByUserId = async (userId: string): Promise<Cart> => {
   const { rows } = await pool.query(
     `
-    SELECT * FROM cart
+    SELECT * FROM carts
     WHERE user_id = $1
     `,
     [userId],
@@ -16,7 +16,7 @@ export const findByUserId = async (userId: string): Promise<Cart> => {
 export const add = async (userId: string): Promise<Cart> => {
   const { rows } = await pool.query(
     `
-    INSERT INTO cart (user_id)
+    INSERT INTO carts (user_id)
     VALUES ($1)
     RETURNING *
     `,
