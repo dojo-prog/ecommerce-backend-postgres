@@ -4,8 +4,8 @@ import { OrderItem } from "../schemas/order_items";
 import { OrderQueryPayload, OrderWithItems } from "../schemas/orders";
 import { calculateDistanceMeters } from "../utils/calculateDistanceMeters";
 
-import * as orderModel from "../models/order.model";
 import * as orderItemService from "../services/order_item.service";
+import * as orderModel from "../models/order.model";
 import * as cartModel from "../models/cart.model";
 import * as cartItemModel from "../models/cart_item.model";
 import * as inventoryModel from "../models/inventory.model";
@@ -76,23 +76,32 @@ export const checkout = async (
   try {
     await client.query("BEGIN");
 
-    // Get Cart
+    // =======================================
+    // GET USER CART
+    // =======================================
+
     const cart = await cartModel.findById(userId, client);
 
     if (!cart) {
       throw new AppError(404, "Cart not found");
     }
 
-    // Get Cart Items
+    // =======================================
+    // GET CURRENT CART ITEMS
+    // =======================================
+
     const cartItems = await cartItemModel.findByCartId(cart.id, client);
 
     if (cartItems.length === 0) {
       throw new AppError(400, "Cannot checout with an empty cart");
     }
 
+    // =======================================
+    // DECREMENT STOCK & ACCUMULATE SUBTOTAL
+    // =======================================
+
     let subtotalCents = 0;
 
-    // Decrement product stock & accumulate subtotal
     for (const ci of cartItems) {
       const { product, quantity } = ci;
 
@@ -109,7 +118,10 @@ export const checkout = async (
       subtotalCents += product.price_cents * quantity;
     }
 
-    // Get user address coordinates
+    // =======================================
+    // GET USER PROVIDED ADDRESS
+    // =======================================
+
     const address = await addressModel.findById(userId, addressId);
 
     if (!address) {
@@ -118,10 +130,23 @@ export const checkout = async (
 
     const { latitude: userAddLat, longitude: userAddLon } = address;
 
-    // Get store address
-    const { latitude: storeLat, longitude: storeLon } = await storeModel.find();
+    // =======================================
+    // GET STORE ADDRESS
+    // =======================================
 
-    // Calculate straight-line geo distance
+    const storeAddress = await storeModel.find(client);
+
+    if (!storeAddress) {
+      throw new AppError(400, "No store is currently registered");
+    }
+
+    const { latitude: storeLat, longitude: storeLon } = storeAddress;
+
+    // =======================================
+    // CALCULATE STRAIGHT-LINE DISTANCE
+    // BETWEEN ADDRESSES
+    // =======================================
+
     const shippingDistanceMeters = Math.round(
       calculateDistanceMeters(
         { lat: userAddLat, lon: userAddLon },
@@ -129,10 +154,22 @@ export const checkout = async (
       ),
     );
 
-    // Get shipping method
-    const { base_fee_cents, fee_per_km_cents } = await shippingModel.find();
+    // =======================================
+    // GET SHIPPING METHOD
+    // =======================================
 
-    // Calculate fees
+    const shippingMethod = await shippingModel.find(client);
+
+    if (!shippingMethod) {
+      throw new AppError(400, "No shipping method is registered currently");
+    }
+
+    const { base_fee_cents, fee_per_km_cents } = shippingMethod;
+
+    // =======================================
+    // CALCULATE TAX, SHIPPING FEE, TOTAL
+    // =======================================
+
     const taxCents = Math.round(subtotalCents * 0.12);
     const shippingFeeCents =
       base_fee_cents +
@@ -140,7 +177,10 @@ export const checkout = async (
 
     const totalCents = subtotalCents + taxCents + shippingFeeCents;
 
-    // Create order
+    // =======================================
+    // CREATE / INSERT ORDER
+    // =======================================
+
     const order = await orderModel.create(client, {
       user_id: userId,
       subtotal_cents: subtotalCents,
@@ -150,7 +190,10 @@ export const checkout = async (
       total_cents: totalCents,
     });
 
-    // Create order items
+    // =======================================
+    // CREATE / INSERT ORDER ITEMS
+    // =======================================
+
     const items: OrderItem[] = [];
 
     for (const ci of cartItems) {
@@ -169,7 +212,10 @@ export const checkout = async (
       items.push(item);
     }
 
-    // Clear cart
+    // =======================================
+    // CLEAR USER CART
+    // =======================================
+
     await cartItemModel.removeAllByCartId(client, cart.id);
 
     await client.query("COMMIT");
