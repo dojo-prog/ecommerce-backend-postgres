@@ -1,7 +1,11 @@
 import express from "express";
 import { protectRoute } from "../middlewares/auth.middleware";
 import validate from "../middlewares/validation.middleware";
-import { OrderParamsSchema } from "../schemas/orders";
+import {
+  CheckoutPayloadSchema,
+  OrderParamsSchema,
+  OrderQuerySchema,
+} from "../schemas/orders";
 import {
   checkout,
   getUserOrderById,
@@ -12,9 +16,9 @@ const router = express.Router();
 
 router.use(protectRoute);
 
-router.get("/", getUserOrders);
+router.get("/", validate({ query: OrderQuerySchema }), getUserOrders);
 
-router.post("/checkout", checkout);
+router.post("/checkout", validate({ body: CheckoutPayloadSchema }), checkout);
 
 router.get(
   "/:orderId",
