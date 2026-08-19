@@ -12,10 +12,16 @@ export const addInventoryStock = async (
   productId: string,
   quantity: number,
 ): Promise<ProductRelations> => {
-  const inventory = await inventoryModel.findById(productId);
+  const product = await findProductById(productId);
+
+  if (!product) {
+    throw new AppError(404, "Product not found");
+  }
+
+  let inventory = await inventoryModel.findById(productId);
 
   if (!inventory) {
-    throw new AppError(404, "Inventory not found");
+    inventory = await inventoryModel.add(productId, 0);
   }
 
   await inventoryModel.update(productId, {
@@ -29,14 +35,16 @@ export const updateProductInventory = async (
   productId: string,
   newQuantity: number,
 ): Promise<ProductRelations> => {
-  const inventory = await inventoryModel.findById(productId);
+  const product = await findProductById(productId);
 
-  if (!inventory) {
-    throw new AppError(404, "Inventory not found");
+  if (!product) {
+    throw new AppError(404, "Product not found");
   }
 
-  if (inventory.quantity === newQuantity) {
-    throw new AppError(400, `Inventory already contains ${newQuantity} units`);
+  let inventory = await inventoryModel.findById(productId);
+
+  if (!inventory) {
+    inventory = await inventoryModel.add(productId, 0);
   }
 
   await inventoryModel.update(productId, {
