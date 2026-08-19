@@ -88,7 +88,7 @@ export const findByName = async (name: string): Promise<ProductRelations> => {
 
 export const add = async (
   payload: CreateProductFinalPayload,
-): Promise<ProductRelations> => {
+): Promise<{ id: string }> => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
   const { rows } = await pool.query(
@@ -100,9 +100,7 @@ export const add = async (
     values,
   );
 
-  const id = rows[0].id;
-
-  return await findById(id);
+  return rows[0];
 };
 
 export const update = async (
