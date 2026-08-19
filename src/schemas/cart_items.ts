@@ -5,6 +5,7 @@ import {
   PaginationResultSchema,
   NonNegativeIntSchema,
   UUIDSchema,
+  SearchQuerySchema,
 } from "./common";
 import { CategoryNameSchema } from "./categories";
 import { SubcategoryNameSchema } from "./subcategories";
@@ -49,6 +50,15 @@ export const CartItemsRelationsSchema = z.object({
 
 export const CartItemQuerySchema = z.object({
   ...PaginationQuerySchema.shape,
+  search: SearchQuerySchema,
+});
+
+// =======================================
+// REQ PARAMS SCHEMA
+// =======================================
+
+export const CartItemParamsSchema = z.object({
+  cartItemId: UUIDSchema,
 });
 
 // =======================================
@@ -57,7 +67,7 @@ export const CartItemQuerySchema = z.object({
 
 export const AddToCartInputSchema = z.object({
   productId: UUIDSchema,
-  quantity: CartItemQuantitySchema,
+  quantity: CartItemQuantitySchema.optional().default(1),
 });
 
 export const UpdateCartItemInputSchema = z.object({
