@@ -1,10 +1,13 @@
+import { PoolClient } from "pg";
 import pool from "../database/db";
 import { CreateStorePayload, Store } from "../schemas/stores";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
-export const find = async (): Promise<Store> => {
-  const { rows } = await pool.query(
+export const find = async (client?: PoolClient): Promise<Store> => {
+  const conn = client ? client : pool;
+
+  const { rows } = await conn.query(
     `
     SELECT * FROM stores;
     `,
