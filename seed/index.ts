@@ -1,6 +1,8 @@
 import pool from "../src/database/db";
 import seedCategories from "./categories/seed";
 import seedProducts from "./products/seed";
+import seedShipping from "./shipping/seed";
+import seedStores from "./stores/seed";
 import seedSubcategories from "./subcategories/seed";
 import seedUsers from "./users/seed";
 
@@ -12,6 +14,8 @@ const startSeed = async () => {
     await seedCategories();
     await seedSubcategories();
     await seedProducts();
+    await seedStores();
+    await seedShipping();
 
     await pool.query("COMMIT");
     console.log("\nSeeding complete.\n");
