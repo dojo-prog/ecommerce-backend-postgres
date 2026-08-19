@@ -14,6 +14,7 @@ import {
   removeFromCart,
   updateItemQuantity,
 } from "../controllers/cart_items.controller";
+import { ProductParamsSchema } from "../schemas/products";
 
 const router = express.Router();
 
@@ -25,12 +26,12 @@ router
   .post(validate({ body: AddToCartInputSchema }), addToCart);
 
 router
-  .route("/:cartItemId")
-  .get(validate({ params: CartItemParamsSchema }), getCartItemById)
+  .route("/:productId")
+  .get(validate({ params: ProductParamsSchema }), getCartItemById)
   .patch(
-    validate({ params: CartItemParamsSchema, body: UpdateCartItemInputSchema }),
+    validate({ params: ProductParamsSchema, body: UpdateCartItemInputSchema }),
     updateItemQuantity,
   )
-  .delete(validate({ params: CartItemParamsSchema }), removeFromCart);
+  .delete(validate({ params: ProductParamsSchema }), removeFromCart);
 
 export default router;
