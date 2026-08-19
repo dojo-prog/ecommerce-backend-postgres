@@ -12,7 +12,7 @@ const seedProducts = async () => {
   const subCatIdMap: Record<string, string> = {};
 
   for (const p of mockProducts) {
-    const { subcategory_name, ...rest } = p;
+    const { subcategory_name, initial_quantity, ...rest } = p;
 
     let subcategory_id: string;
 
@@ -41,12 +41,23 @@ const seedProducts = async () => {
 
     const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
-    await pool.query(
+    const { rows } = await pool.query(
       `
       INSERT INTO products (${columnsStr})
       VALUES (${placeholdersStr})
+      RETURNING id
       `,
       values,
+    );
+
+    const product_id = rows[0].id;
+
+    await pool.query(
+      `
+      INSERT INTO inventory (product_id, quantity)
+      VALUES ($1, $2)
+      `,
+      [product_id, initial_quantity],
     );
 
     console.log("Inserted product:", p.name);

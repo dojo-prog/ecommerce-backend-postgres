@@ -4,6 +4,7 @@ interface MockProduct {
   description: string;
   price_cents: number;
   weight_grams: number;
+  initial_quantity: number;
 }
 
 const mockProducts: MockProduct[] = [
@@ -14,6 +15,7 @@ const mockProducts: MockProduct[] = [
     description: "Crisp and sweet red apples, perfect for snacking or baking.",
     price_cents: 18900,
     weight_grams: 1000,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Fresh Carrots",
@@ -22,6 +24,7 @@ const mockProducts: MockProduct[] = [
       "Fresh and crunchy carrots suitable for salads, soups, and cooking.",
     price_cents: 7900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Fresh Spinach",
@@ -30,6 +33,7 @@ const mockProducts: MockProduct[] = [
       "Tender fresh spinach leaves packed with nutrients and flavor.",
     price_cents: 6500,
     weight_grams: 250,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Fresh Button Mushrooms",
@@ -37,6 +41,7 @@ const mockProducts: MockProduct[] = [
     description: "Fresh button mushrooms with a mild earthy flavor.",
     price_cents: 14900,
     weight_grams: 250,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Meat & Poultry
@@ -47,6 +52,7 @@ const mockProducts: MockProduct[] = [
       "Tender beef sirloin cuts ideal for grilling, frying, or roasting.",
     price_cents: 69900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Pork Liempo",
@@ -54,6 +60,7 @@ const mockProducts: MockProduct[] = [
     description: "Fresh pork belly with a balanced layer of meat and fat.",
     price_cents: 45900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Fresh Chicken Breast",
@@ -62,6 +69,7 @@ const mockProducts: MockProduct[] = [
       "Boneless and skinless chicken breast suitable for everyday meals.",
     price_cents: 32900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Beef Hotdog",
@@ -70,6 +78,7 @@ const mockProducts: MockProduct[] = [
       "Juicy beef hotdogs that are perfect for breakfast and quick meals.",
     price_cents: 15900,
     weight_grams: 400,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Seafood
@@ -79,6 +88,7 @@ const mockProducts: MockProduct[] = [
     description: "Fresh milkfish cleaned and prepared for convenient cooking.",
     price_cents: 29900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Fresh Shrimp",
@@ -87,6 +97,7 @@ const mockProducts: MockProduct[] = [
       "Fresh medium-sized shrimp perfect for grilling, frying, or pasta.",
     price_cents: 54900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Frozen Salmon Fillet",
@@ -94,6 +105,7 @@ const mockProducts: MockProduct[] = [
     description: "Individually packed frozen salmon fillets with rich flavor.",
     price_cents: 79900,
     weight_grams: 250,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Dairy & Eggs
@@ -103,6 +115,7 @@ const mockProducts: MockProduct[] = [
     description: "Creamy whole milk with a rich and smooth taste.",
     price_cents: 11900,
     weight_grams: 1000,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Cheddar Cheese Block",
@@ -111,6 +124,7 @@ const mockProducts: MockProduct[] = [
       "Mild cheddar cheese with a smooth texture for sandwiches and cooking.",
     price_cents: 21900,
     weight_grams: 200,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Plain Greek Yogurt",
@@ -119,6 +133,7 @@ const mockProducts: MockProduct[] = [
       "Thick and creamy plain Greek yogurt with a naturally tangy flavor.",
     price_cents: 16900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Premium Brown Eggs",
@@ -126,6 +141,7 @@ const mockProducts: MockProduct[] = [
     description: "Farm-fresh brown eggs suitable for breakfast and baking.",
     price_cents: 12900,
     weight_grams: 600,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Bakery
@@ -135,6 +151,7 @@ const mockProducts: MockProduct[] = [
     description: "Soft sliced white bread perfect for sandwiches and toast.",
     price_cents: 8900,
     weight_grams: 400,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Butter Croissant",
@@ -142,6 +159,7 @@ const mockProducts: MockProduct[] = [
     description: "Flaky golden croissant made with rich butter.",
     price_cents: 7900,
     weight_grams: 80,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Chocolate Fudge Cake",
@@ -149,6 +167,7 @@ const mockProducts: MockProduct[] = [
     description: "Moist chocolate cake topped with smooth chocolate frosting.",
     price_cents: 59900,
     weight_grams: 800,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Canned & Packaged Foods
@@ -158,6 +177,7 @@ const mockProducts: MockProduct[] = [
     description: "Savory canned corned beef that's quick and easy to prepare.",
     price_cents: 9990,
     weight_grams: 175,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Canned Tuna Flakes",
@@ -166,6 +186,7 @@ const mockProducts: MockProduct[] = [
       "Tender tuna flakes packed in oil for quick and convenient meals.",
     price_cents: 8900,
     weight_grams: 180,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Instant Chicken Noodles",
@@ -173,6 +194,7 @@ const mockProducts: MockProduct[] = [
     description: "Quick-cooking chicken-flavored noodles for an easy meal.",
     price_cents: 1590,
     weight_grams: 60,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Macaroni Pasta Pack",
@@ -181,6 +203,7 @@ const mockProducts: MockProduct[] = [
       "Durable dried macaroni pasta suitable for soups and baked dishes.",
     price_cents: 8900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Rice, Grains & Pasta
@@ -191,6 +214,7 @@ const mockProducts: MockProduct[] = [
       "Fragrant long-grain jasmine rice with a soft and fluffy texture.",
     price_cents: 32900,
     weight_grams: 5000,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Spaghetti Pasta",
@@ -199,6 +223,7 @@ const mockProducts: MockProduct[] = [
       "Classic dried spaghetti pasta ideal for everyday pasta dishes.",
     price_cents: 10900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Instant Ramen Noodles",
@@ -207,6 +232,7 @@ const mockProducts: MockProduct[] = [
       "Springy noodles that cook quickly and pair well with soups and sauces.",
     price_cents: 6900,
     weight_grams: 400,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Rolled Oats",
@@ -215,6 +241,7 @@ const mockProducts: MockProduct[] = [
       "Whole grain rolled oats perfect for breakfast bowls and baking.",
     price_cents: 14900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Snacks
@@ -225,6 +252,7 @@ const mockProducts: MockProduct[] = [
       "Crispy golden potato chips with a classic lightly salted flavor.",
     price_cents: 9900,
     weight_grams: 150,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Butter Biscuits",
@@ -233,6 +261,7 @@ const mockProducts: MockProduct[] = [
       "Crunchy buttery biscuits that pair perfectly with coffee or tea.",
     price_cents: 7900,
     weight_grams: 200,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Milk Chocolate Bar",
@@ -240,6 +269,7 @@ const mockProducts: MockProduct[] = [
     description: "Smooth and creamy milk chocolate bar for a sweet treat.",
     price_cents: 8900,
     weight_grams: 100,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Assorted Fruit Candies",
@@ -248,6 +278,7 @@ const mockProducts: MockProduct[] = [
       "A colorful assortment of individually wrapped fruit-flavored candies.",
     price_cents: 5900,
     weight_grams: 150,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Beverages
@@ -258,6 +289,7 @@ const mockProducts: MockProduct[] = [
       "Refreshing carbonated cola drink with a classic sweet flavor.",
     price_cents: 6900,
     weight_grams: 1500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Fresh Orange Juice",
@@ -266,6 +298,7 @@ const mockProducts: MockProduct[] = [
       "Refreshing orange juice with a naturally sweet and citrusy flavor.",
     price_cents: 12900,
     weight_grams: 1000,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Purified Drinking Water",
@@ -273,6 +306,7 @@ const mockProducts: MockProduct[] = [
     description: "Clean and refreshing purified drinking water.",
     price_cents: 3500,
     weight_grams: 1500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Electrolyte Sports Drink",
@@ -281,6 +315,7 @@ const mockProducts: MockProduct[] = [
       "Refreshing electrolyte drink designed to help replenish fluids after activity.",
     price_cents: 8900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Coffee & Tea
@@ -291,6 +326,7 @@ const mockProducts: MockProduct[] = [
       "Rich roasted ground coffee with a smooth aroma and bold flavor.",
     price_cents: 24900,
     weight_grams: 250,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Earl Grey Tea Bags",
@@ -298,6 +334,7 @@ const mockProducts: MockProduct[] = [
     description: "Aromatic black tea infused with fragrant bergamot flavor.",
     price_cents: 17900,
     weight_grams: 40,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Creamy Hot Chocolate Mix",
@@ -305,6 +342,7 @@ const mockProducts: MockProduct[] = [
     description: "Rich chocolate drink mix for a warm and comforting beverage.",
     price_cents: 15900,
     weight_grams: 300,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Condiments & Sauces
@@ -314,6 +352,7 @@ const mockProducts: MockProduct[] = [
     description: "Rich tomato ketchup with a balanced sweet and tangy flavor.",
     price_cents: 9900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Creamy Mayonnaise",
@@ -322,6 +361,7 @@ const mockProducts: MockProduct[] = [
       "Smooth and creamy mayonnaise perfect for sandwiches and salads.",
     price_cents: 14900,
     weight_grams: 470,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Premium Soy Sauce",
@@ -330,6 +370,7 @@ const mockProducts: MockProduct[] = [
       "Savory soy sauce that adds depth and umami to everyday dishes.",
     price_cents: 7900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Cane Vinegar",
@@ -338,6 +379,7 @@ const mockProducts: MockProduct[] = [
       "Mild cane vinegar suitable for marinades, dipping sauces, and cooking.",
     price_cents: 5900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Cooking Essentials
@@ -348,6 +390,7 @@ const mockProducts: MockProduct[] = [
       "Light and versatile cooking oil suitable for frying and everyday cooking.",
     price_cents: 19900,
     weight_grams: 1000,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Fine Iodized Salt",
@@ -355,6 +398,7 @@ const mockProducts: MockProduct[] = [
     description: "Fine iodized salt for seasoning and everyday cooking.",
     price_cents: 3900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "All-Purpose Flour",
@@ -362,6 +406,7 @@ const mockProducts: MockProduct[] = [
     description: "Versatile all-purpose flour suitable for baking and cooking.",
     price_cents: 8900,
     weight_grams: 1000,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Ground Black Pepper",
@@ -370,6 +415,7 @@ const mockProducts: MockProduct[] = [
       "Aromatic ground black pepper for seasoning meat, vegetables, and soups.",
     price_cents: 9900,
     weight_grams: 100,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Frozen Foods
@@ -380,6 +426,7 @@ const mockProducts: MockProduct[] = [
       "Convenient frozen mix of carrots, peas, corn, and green beans.",
     price_cents: 12900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Frozen Chicken Nuggets",
@@ -388,6 +435,7 @@ const mockProducts: MockProduct[] = [
       "Crispy breaded chicken nuggets that are easy to prepare at home.",
     price_cents: 22900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Vanilla Ice Cream",
@@ -395,6 +443,7 @@ const mockProducts: MockProduct[] = [
     description: "Smooth and creamy vanilla ice cream with a classic flavor.",
     price_cents: 29900,
     weight_grams: 1000,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Frozen Beef Lasagna",
@@ -403,6 +452,7 @@ const mockProducts: MockProduct[] = [
       "Convenient frozen lasagna layered with pasta, beef, tomato sauce, and cheese.",
     price_cents: 24900,
     weight_grams: 400,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Breakfast Foods
@@ -412,6 +462,7 @@ const mockProducts: MockProduct[] = [
     description: "Crunchy corn flakes lightly coated with sweet honey flavor.",
     price_cents: 19900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Instant Oatmeal",
@@ -419,6 +470,7 @@ const mockProducts: MockProduct[] = [
     description: "Quick-cooking oatmeal that's convenient for busy mornings.",
     price_cents: 13900,
     weight_grams: 400,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Creamy Peanut Butter",
@@ -427,6 +479,7 @@ const mockProducts: MockProduct[] = [
       "Smooth creamy peanut butter perfect for toast, sandwiches, and snacks.",
     price_cents: 17900,
     weight_grams: 340,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Personal Care
@@ -437,6 +490,7 @@ const mockProducts: MockProduct[] = [
       "Gentle shampoo formulated for everyday cleansing and soft hair.",
     price_cents: 19900,
     weight_grams: 400,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Moisturizing Body Wash",
@@ -445,6 +499,7 @@ const mockProducts: MockProduct[] = [
       "Gentle body wash that cleanses while helping maintain skin moisture.",
     price_cents: 15900,
     weight_grams: 400,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Mint Toothpaste",
@@ -452,6 +507,7 @@ const mockProducts: MockProduct[] = [
     description: "Refreshing mint toothpaste for everyday oral hygiene.",
     price_cents: 8900,
     weight_grams: 150,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Fresh Deodorant Roll-On",
@@ -460,6 +516,7 @@ const mockProducts: MockProduct[] = [
       "Long-lasting roll-on deodorant with a clean and refreshing scent.",
     price_cents: 10900,
     weight_grams: 50,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Household Essentials
@@ -469,6 +526,7 @@ const mockProducts: MockProduct[] = [
     description: "Soft and absorbent toilet tissue for everyday household use.",
     price_cents: 19900,
     weight_grams: 700,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Stackable Storage Container",
@@ -477,6 +535,7 @@ const mockProducts: MockProduct[] = [
       "Durable plastic storage container for organizing household items.",
     price_cents: 24900,
     weight_grams: 300,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Non-Stick Frying Pan",
@@ -484,6 +543,7 @@ const mockProducts: MockProduct[] = [
     description: "Durable non-stick frying pan suitable for everyday cooking.",
     price_cents: 59900,
     weight_grams: 900,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Cleaning Supplies
@@ -494,6 +554,7 @@ const mockProducts: MockProduct[] = [
       "Powerful liquid detergent designed to remove everyday stains and odors.",
     price_cents: 24900,
     weight_grams: 1500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Dishwashing Liquid",
@@ -502,6 +563,7 @@ const mockProducts: MockProduct[] = [
       "Concentrated dishwashing liquid that cuts through grease and food residue.",
     price_cents: 9900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Multi-Surface Cleaner",
@@ -509,6 +571,7 @@ const mockProducts: MockProduct[] = [
     description: "Versatile cleaner for everyday household surfaces.",
     price_cents: 12900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Household Disinfectant",
@@ -517,6 +580,7 @@ const mockProducts: MockProduct[] = [
       "Multi-purpose disinfectant for cleaning and sanitizing household surfaces.",
     price_cents: 15900,
     weight_grams: 500,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Baby Care
@@ -527,6 +591,7 @@ const mockProducts: MockProduct[] = [
       "Soft and absorbent diapers designed to keep babies comfortable and dry.",
     price_cents: 39900,
     weight_grams: 900,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Baby Rice Cereal",
@@ -535,6 +600,7 @@ const mockProducts: MockProduct[] = [
       "Gentle rice cereal suitable as an introductory solid food for babies.",
     price_cents: 18900,
     weight_grams: 250,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Gentle Baby Shampoo",
@@ -542,6 +608,7 @@ const mockProducts: MockProduct[] = [
     description: "Mild baby shampoo designed for gentle everyday cleansing.",
     price_cents: 15900,
     weight_grams: 200,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 
   // Pet Supplies
@@ -552,6 +619,7 @@ const mockProducts: MockProduct[] = [
       "Complete dry dog food with chicken flavor for everyday nutrition.",
     price_cents: 34900,
     weight_grams: 2000,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Tuna Cat Food",
@@ -560,6 +628,7 @@ const mockProducts: MockProduct[] = [
       "Moist cat food with tuna flavor formulated for everyday feeding.",
     price_cents: 7900,
     weight_grams: 85,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Crunchy Dog Treats",
@@ -568,6 +637,7 @@ const mockProducts: MockProduct[] = [
       "Crunchy bite-sized treats suitable for rewarding dogs during training.",
     price_cents: 12900,
     weight_grams: 200,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
   {
     name: "Pet Grooming Shampoo",
@@ -576,6 +646,7 @@ const mockProducts: MockProduct[] = [
       "Gentle pet shampoo designed to clean fur while leaving it soft and fresh.",
     price_cents: 19900,
     weight_grams: 250,
+    initial_quantity: Math.floor(Math.random() * 100) + 1,
   },
 ];
 
