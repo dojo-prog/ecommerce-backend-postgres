@@ -9,6 +9,7 @@ const seedUsers = async () => {
 
   console.log("Truncating users table...");
   await truncateTable("users");
+  await truncateTable("carts");
 
   const salt = await bcrypt.genSalt(10);
   const password_hash = await bcrypt.hash("testPass", salt);
@@ -21,12 +22,23 @@ const seedUsers = async () => {
 
     const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
-    await pool.query(
+    const { rows } = await pool.query(
       `
       INSERT INTO users (${columnsStr})
       VALUES (${placeholdersStr})
+      RETURNING id
       `,
       values,
+    );
+
+    const user_id = rows[0].id;
+
+    await pool.query(
+      `
+      INSERT INTO carts (user_id)
+      VALUES ($1)
+      `,
+      [user_id],
     );
 
     console.log("Inserted user:", u.username);
