@@ -8,6 +8,7 @@ import {
   UpdateProductResult,
 } from "../schemas/products";
 import * as productModel from "../models/product.model";
+import { createInventory } from "../services/inventory.service";
 import AppError from "../utils/AppError";
 import { uploadMulterImage } from "../integrations/cloudinary/upload";
 import generateChanges from "../utils/generateChanges";
@@ -41,8 +42,10 @@ export const createProduct = async (
     throw new AppError(400, `A product named ${payload.name} already exists`);
   }
 
+  const { initial_quantity, ...rest } = payload;
+
   const finalPayload: CreateProductFinalPayload = {
-    ...payload,
+    ...rest,
   };
 
   if (thumbnail) {
@@ -55,7 +58,14 @@ export const createProduct = async (
     finalPayload.thumbnail_public_id = public_id;
   }
 
-  return await productModel.add(finalPayload);
+  const product = await productModel.add(finalPayload);
+
+  await createInventory(
+    product.id,
+    initial_quantity !== undefined ? initial_quantity : 0,
+  );
+
+  return await productModel.findById(product.id);
 };
 
 export const getProductById = async (productId: string) => {
