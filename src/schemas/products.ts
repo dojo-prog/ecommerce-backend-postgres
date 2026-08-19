@@ -133,6 +133,7 @@ const ProductBaseInputSchema = z.object({
   currency: CurrencySchema.optional().default("PHP"),
   weight_grams: WeightGramsSchema,
   is_active: IsActiveSchema.optional(),
+  initial_quantity: NonNegativeIntSchema.optional(),
 });
 
 export const CreateProductInputSchema = ProductBaseInputSchema;
