@@ -5,20 +5,25 @@ import { UpdateInventoryInputSchema } from "../schemas/inventory";
 import {
   addInventoryStock,
   getInventoryById,
-  UpdateProductInventory,
+  updateProductInventory,
 } from "../controllers/inventory.controller";
+import { authorizeRoles, protectRoute } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
 router
   .route("/:productId/inventory")
-  .post(
+  .put(
+    protectRoute,
+    authorizeRoles(["admin"]),
     validate({ params: ProductParamsSchema, body: UpdateInventoryInputSchema }),
     addInventoryStock,
   )
   .patch(
+    protectRoute,
+    authorizeRoles(["admin"]),
     validate({ params: ProductParamsSchema, body: UpdateInventoryInputSchema }),
-    UpdateProductInventory,
+    updateProductInventory,
   )
   .get(validate({ params: ProductParamsSchema }), getInventoryById);
 
