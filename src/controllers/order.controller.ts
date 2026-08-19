@@ -21,6 +21,8 @@ export const getUserOrderById: Controller = async (req, res, next) => {
       req.user!.id,
       req.params.orderId as string,
     );
+
+    res.status(200).json({ success: true, data: { order } });
   } catch (error) {
     next(error);
   }
