@@ -1,5 +1,23 @@
+import { PoolClient } from "pg";
 import pool from "../database/db";
 import { Cart } from "../schemas/cart";
+
+export const findById = async (
+  userId: string,
+  client?: PoolClient,
+): Promise<Cart> => {
+  const conn = client ? client : pool;
+
+  const { rows } = await conn.query(
+    `
+    SELECT * FROM carts
+    WHERE user_id = $1
+    `,
+    [userId],
+  );
+
+  return rows[0];
+};
 
 export const findByUserId = async (userId: string): Promise<Cart> => {
   const { rows } = await pool.query(

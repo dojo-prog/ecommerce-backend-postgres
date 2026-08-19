@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import pool from "../database/db";
 import { Inventory, UpdateInventoryPayload } from "../schemas/inventory";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
@@ -52,4 +53,23 @@ export const update = async (
     `,
     values,
   );
+};
+
+export const decrement = async (
+  client: PoolClient,
+  productId: string,
+  quantity: number,
+): Promise<{ quantity: number }> => {
+  const { rows } = await client.query(
+    `
+    UPDATE inventory 
+    SET quantity = quantity - $1
+    WHERE product_id = $2
+      AND quantity >= $1
+    RETURNING quantity 
+    `,
+    [quantity, productId],
+  );
+
+  return rows[0];
 };

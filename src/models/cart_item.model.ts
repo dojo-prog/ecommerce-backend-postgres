@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import pool from "../database/db";
 import {
   CART_ITEM_JOINS,
@@ -42,6 +43,25 @@ export const find = async (
     cart_items,
     total: rows[0]?.total ?? 0,
   };
+};
+
+export const findByCartId = async (
+  cartId: string,
+  client?: PoolClient,
+): Promise<CartItemRelations[]> => {
+  const conn = client ? client : pool;
+
+  const { rows } = await conn.query(
+    `
+    SELECT ${CART_ITEM_RELATIONS_PROJECTION}
+    FROM cart_items ci 
+    ${CART_ITEM_JOINS}
+    WHERE ci.cart_id = $1
+    `,
+    [cartId],
+  );
+
+  return rows ?? [];
 };
 
 export const findById = async (
@@ -112,5 +132,19 @@ export const remove = async (
       AND cart.user_id = $2
     `,
     [product_id, userId],
+  );
+};
+
+export const removeAllByCartId = async (
+  client: PoolClient,
+  cartId: string,
+): Promise<void> => {
+  await client.query(
+    `
+    DELETE FROM cart_items ci
+    USING carts cart
+      WHERE cart.id = $1
+    `,
+    [cartId],
   );
 };
