@@ -8,6 +8,7 @@ const seedProducts = async () => {
 
   console.log("Truncating products table...");
   await truncateTable("products");
+  await truncateTable("inventory");
 
   const subCatIdMap: Record<string, string> = {};
 
