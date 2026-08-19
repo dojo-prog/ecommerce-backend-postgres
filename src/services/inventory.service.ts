@@ -47,6 +47,10 @@ export const updateProductInventory = async (
     inventory = await inventoryModel.add(productId, 0);
   }
 
+  if (inventory.quantity === newQuantity) {
+    throw new AppError(400, `Inventory already contains ${newQuantity} units`);
+  }
+
   await inventoryModel.update(productId, {
     quantity: newQuantity,
   });
