@@ -34,8 +34,11 @@ export const find = async (
 export const findById = async (
   userId: string,
   orderId: string,
+  client?: PoolClient,
 ): Promise<Order> => {
-  const { rows } = await pool.query(
+  const conn = client ? client : pool;
+
+  const { rows } = await conn.query(
     `
     SELECT * FROM orders
     WHERE id = $1
@@ -60,6 +63,47 @@ export const create = async (
     RETURNING *
     `,
     values,
+  );
+
+  return rows[0];
+};
+
+export const markAsPaid = async (orderId: string): Promise<Order> => {
+  const { rows } = await pool.query(
+    `
+    UPDATE orders
+    SET
+      status = 'paid',
+      paid_at = NOW(),
+      updated_at = NOW()
+    WHERE id = $1
+      AND status = 'pending'
+    RETURNING *
+    `,
+    [orderId],
+  );
+
+  return rows[0];
+};
+
+export const cancel = async (
+  orderId: string,
+  client?: PoolClient,
+): Promise<Order> => {
+  const conn = client ? client : pool;
+
+  const { rows } = await conn.query(
+    `
+    UPDATE orders
+    SET
+      status = 'cancelled',
+      cancelled_at = NOW(),
+      updated_at = NOW()
+    WHERE id = $1
+      AND status = 'pending'
+    RETURNING *
+    `,
+    [orderId],
   );
 
   return rows[0];
