@@ -125,12 +125,11 @@ const initDb = async () => {
       shipping_fee_cents int NOT NULL CHECK (shipping_fee_cents >= 0), 
       shipping_distance_meters int NOT NULL CHECK (shipping_distance_meters >= 0),
       total_cents int NOT NULL CHECK (total_cents >= 0), 
-      timestamps jsonb NOT NULL DEFAULT '{
-        "paid_at": null,
-        "shipped_at": null,
-        "delivered_at": null,
-        "cancelled_at": null
-      }'::jsonb,
+      paid_at timestamptz,
+      processed_at timestamptz,
+      shipped_at timestamptz,
+      delivered_at timestamptz,
+      cancelled_at timestamptz,
       created_at timestamptz NOT NULL DEFAULT now(),
       updated_at timestamptz NOT NULL DEFAULT now()
     );
