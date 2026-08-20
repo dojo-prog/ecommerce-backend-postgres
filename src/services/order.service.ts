@@ -5,7 +5,6 @@ import { OrderQueryPayload, OrderWithItems } from "../schemas/orders";
 import { calculateDistanceMeters } from "../utils/calculateDistanceMeters";
 
 import * as orderItemService from "../services/order_item.service";
-import * as paymentService from "../services/payment.service";
 
 import * as orderModel from "../models/order.model";
 import * as cartModel from "../models/cart.model";
