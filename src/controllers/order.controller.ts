@@ -42,3 +42,21 @@ export const checkout: Controller = async (req, res, next) => {
     next(error);
   }
 };
+
+export const payOrder: Controller = async (req, res, next) => {
+  try {
+    const order = await orderService.payOrder(
+      req.user!.id,
+      req.params.orderId as string,
+      req.body?.shouldFail ?? false,
+    );
+
+    const success = order.status === "paid";
+
+    res
+      .status(201)
+      .json({ success, message: `Order ${order.status}`, data: { order } });
+  } catch (error) {
+    next(error);
+  }
+};
