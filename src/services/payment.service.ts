@@ -1,5 +1,28 @@
 import * as paymentModel from "../models/payment.model";
 import { CreatePaymentPayload, Payment } from "../schemas/payments";
+import AppError from "../utils/AppError";
+
+export const getPaymentByOrderId = async (
+  orderId: string,
+): Promise<Payment> => {
+  const payment = await paymentModel.findByOrderId(orderId);
+
+  if (!payment) {
+    throw new AppError(404, "Payment not found");
+  }
+
+  return payment;
+};
+
+export const getPaymentById = async (paymentId: string): Promise<Payment> => {
+  const payment = await paymentModel.findById(paymentId);
+
+  if (!payment) {
+    throw new AppError(404, "Payment not found");
+  }
+
+  return payment;
+};
 
 export const processPayment = async (
   orderId: string,
