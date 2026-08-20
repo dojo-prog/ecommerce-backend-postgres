@@ -17,8 +17,13 @@ export const findByOrderIds = async (
   return rows;
 };
 
-export const findByOrderId = async (orderId: string): Promise<OrderItem[]> => {
-  const { rows } = await pool.query(
+export const findByOrderId = async (
+  orderId: string,
+  client?: PoolClient,
+): Promise<OrderItem[]> => {
+  const conn = client ? client : pool;
+
+  const { rows } = await conn.query(
     `
     SELECT * FROM order_items
     WHERE order_id = $1
