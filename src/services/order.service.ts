@@ -234,38 +234,6 @@ export const checkout = async (
   }
 };
 
-export const payOrder = async (
-  userId: string,
-  orderId: string,
-  shouldFail = false,
-): Promise<OrderWithItems> => {
-  const order = await orderModel.findById(userId, orderId);
-
-  if (!order) {
-    throw new AppError(404, "Order not found");
-  }
-
-  if (order.status !== "pending") {
-    throw new AppError(400, "Only pending orders can be paid");
-  }
-
-  const payment = await paymentService.processPayment(
-    order.id,
-    order.total_cents,
-    shouldFail,
-  );
-
-  if (!payment.success) {
-    await cancelOrder(userId, orderId);
-
-    throw new AppError(402, "Payment failed");
-  }
-
-  const updatedOrder = await orderModel.markAsPaid(orderId);
-
-  return await getUserOrderById(userId, updatedOrder.id);
-};
-
 export const cancelOrder = async (
   userId: string,
   orderId: string,

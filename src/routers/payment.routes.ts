@@ -6,6 +6,7 @@ import { PaymentParamsSchema } from "../schemas/payments";
 import {
   getPaymentById,
   getPaymentByOrderId,
+  payOrder,
 } from "../controllers/payment.controller";
 
 const router = express.Router();
@@ -14,7 +15,8 @@ router.use(protectRoute);
 
 router
   .route("/orders/:orderId/payments")
-  .get(validate({ params: OrderParamsSchema }), getPaymentByOrderId);
+  .get(validate({ params: OrderParamsSchema }), getPaymentByOrderId)
+  .post(validate({ params: OrderParamsSchema }), payOrder);
 
 router.get(
   "/payments/:paymentId",
