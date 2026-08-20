@@ -10,6 +10,7 @@ import {
   checkout,
   getUserOrderById,
   getUserOrders,
+  payOrder,
 } from "../controllers/order.controller";
 
 const router = express.Router();
@@ -25,5 +26,7 @@ router.get(
   validate({ params: OrderParamsSchema }),
   getUserOrderById,
 );
+
+router.post("/:orderId/pay", validate({ params: OrderParamsSchema }), payOrder);
 
 export default router;
