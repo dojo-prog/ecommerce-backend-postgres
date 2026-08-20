@@ -5,6 +5,8 @@ import { OrderQueryPayload, OrderWithItems } from "../schemas/orders";
 import { calculateDistanceMeters } from "../utils/calculateDistanceMeters";
 
 import * as orderItemService from "../services/order_item.service";
+import * as paymentService from "../services/payment.service";
+
 import * as orderModel from "../models/order.model";
 import * as cartModel from "../models/cart.model";
 import * as cartItemModel from "../models/cart_item.model";
@@ -222,6 +224,89 @@ export const checkout = async (
 
     return {
       ...order,
+      items,
+    };
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+export const payOrder = async (
+  userId: string,
+  orderId: string,
+  shouldFail = false,
+): Promise<OrderWithItems> => {
+  const order = await orderModel.findById(userId, orderId);
+
+  if (!order) {
+    throw new AppError(404, "Order not found");
+  }
+
+  if (order.status !== "pending") {
+    throw new AppError(400, "Only pending orders can be paid");
+  }
+
+  const payment = await paymentService.processPayment(
+    order.id,
+    order.total_cents,
+    shouldFail,
+  );
+
+  if (!payment.success) {
+    await cancelOrder(userId, orderId);
+
+    throw new AppError(402, "Payment failed");
+  }
+
+  const updatedOrder = await orderModel.markAsPaid(orderId);
+
+  return await getUserOrderById(userId, updatedOrder.id);
+};
+
+export const cancelOrder = async (
+  userId: string,
+  orderId: string,
+): Promise<OrderWithItems> => {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const order = await orderModel.findById(userId, orderId, client);
+
+    if (!order) {
+      throw new AppError(404, "Order not found");
+    }
+
+    if (order.status !== "pending") {
+      throw new AppError(400, "Only pending orders can be cancelled");
+    }
+
+    // =======================================
+    // INCREMENT BACK TO INVENTORY
+    // =======================================
+
+    const items = await orderItemModel.findByOrderId(orderId, client);
+
+    for (const item of items) {
+      if (item.product_id === null) continue;
+
+      await inventoryModel.increment(client, item.product_id, item.quantity);
+    }
+
+    // =======================================
+    // TAG ORDER AS CANCELLED
+    // =======================================
+
+    const cancelledOrder = await orderModel.cancel(orderId, client);
+
+    await client.query("COMMIT");
+
+    return {
+      ...cancelledOrder,
       items,
     };
   } catch (error) {
