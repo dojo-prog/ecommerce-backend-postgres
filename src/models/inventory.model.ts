@@ -73,3 +73,18 @@ export const decrement = async (
 
   return rows[0];
 };
+
+export const increment = async (
+  client: PoolClient,
+  productId: string,
+  quantity: number,
+): Promise<void> => {
+  await client.query(
+    `
+    UPDATE inventory
+    SET quantity = quantity + $1
+    WHERE product_id = $2
+    `,
+    [quantity, productId],
+  );
+};
