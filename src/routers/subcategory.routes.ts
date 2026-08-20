@@ -61,6 +61,8 @@ router
     updateSubcategory,
   )
   .delete(
+    protectRoute,
+    authorizeRoles(["admin"]),
     validate({
       params: CategoryIdParamsSchema.merge(SubcategoryIdParamsSchema),
     }),
