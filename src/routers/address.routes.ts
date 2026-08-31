@@ -14,6 +14,10 @@ import {
   setToDefault,
   updateAddress,
 } from "../controllers/address.controller";
+import {
+  readLimiter,
+  writeLimiter,
+} from "../middlewares/rate.limit.middlewares";
 
 const router = express.Router();
 
@@ -21,20 +25,30 @@ router.use(protectRoute);
 
 router
   .route("/")
-  .get(getUserAddresses)
-  .post(validate({ body: CreateAddressInputSchema }), createAddress);
+  .get(readLimiter, getUserAddresses)
+  .post(
+    writeLimiter,
+    validate({ body: CreateAddressInputSchema }),
+    createAddress,
+  );
 
 router
   .route("/:addressId")
-  .get(validate({ params: AddressParamsSchema }), getAddressById)
+  .get(readLimiter, validate({ params: AddressParamsSchema }), getAddressById)
   .patch(
+    writeLimiter,
     validate({ params: AddressParamsSchema, body: UpdateAddressInputSchema }),
     updateAddress,
   )
-  .delete(validate({ params: AddressParamsSchema }), deleteAddress);
+  .delete(
+    writeLimiter,
+    validate({ params: AddressParamsSchema }),
+    deleteAddress,
+  );
 
 router.patch(
   "/:addressId/default",
+  writeLimiter,
   validate({ params: AddressParamsSchema }),
   setToDefault,
 );

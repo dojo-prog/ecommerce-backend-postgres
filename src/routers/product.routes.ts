@@ -15,13 +15,18 @@ import {
   getProducts,
   updateProduct,
 } from "../controllers/product.controller";
+import {
+  readLimiter,
+  writeLimiter,
+} from "../middlewares/rate.limit.middlewares";
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(validate({ query: ProductQuerySchema }), getProducts)
+  .get(readLimiter, validate({ query: ProductQuerySchema }), getProducts)
   .post(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     multerUpload.single("thumbnail"),
@@ -31,8 +36,9 @@ router
 
 router
   .route("/:productId")
-  .get(validate({ params: ProductParamsSchema }), getProductById)
+  .get(readLimiter, validate({ params: ProductParamsSchema }), getProductById)
   .patch(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     multerUpload.single("thumbnail"),
@@ -40,6 +46,7 @@ router
     updateProduct,
   )
   .delete(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({ params: ProductParamsSchema }),

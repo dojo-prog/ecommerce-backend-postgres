@@ -13,12 +13,16 @@ import inventoryRouter from "./routers/inventory.routes";
 import cartItemRouter from "./routers/cart_item.routes";
 import orderRouter from "./routers/order.routes";
 import paymentRouter from "./routers/payment.routes";
+import { generalLimiter } from "./middlewares/rate.limit.middlewares";
 
 const app = express();
 
 // Parsers
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
+
+// Global Rate Limiter
+app.use(generalLimiter);
 
 // Routers
 app.use("/api/v1/auth", authRouter);

@@ -15,13 +15,18 @@ import {
   getCategoryBySlug,
   updateCategory,
 } from "../controllers/category.controller";
+import {
+  readLimiter,
+  writeLimiter,
+} from "../middlewares/rate.limit.middlewares";
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(validate({ query: CategoryQuerySchema }), getCategories)
+  .get(readLimiter, validate({ query: CategoryQuerySchema }), getCategories)
   .post(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({ body: CreateCategoryInputSchema }),
@@ -30,6 +35,7 @@ router
 
 router.get(
   "/:categorySlug",
+  readLimiter,
   validate({ params: CategorySlugParamsSchema }),
   getCategoryBySlug,
 );
@@ -37,6 +43,7 @@ router.get(
 router
   .route("/:categoryId")
   .patch(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({
@@ -46,6 +53,7 @@ router
     updateCategory,
   )
   .delete(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({ params: CategoryIdParamsSchema }),

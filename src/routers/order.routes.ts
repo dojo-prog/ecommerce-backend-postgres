@@ -11,17 +11,32 @@ import {
   getUserOrderById,
   getUserOrders,
 } from "../controllers/order.controller";
+import {
+  readLimiter,
+  writeLimiter,
+} from "../middlewares/rate.limit.middlewares";
 
 const router = express.Router();
 
 router.use(protectRoute);
 
-router.get("/", validate({ query: OrderQuerySchema }), getUserOrders);
+router.get(
+  "/",
+  readLimiter,
+  validate({ query: OrderQuerySchema }),
+  getUserOrders,
+);
 
-router.post("/checkout", validate({ body: CheckoutPayloadSchema }), checkout);
+router.post(
+  "/checkout",
+  writeLimiter,
+  validate({ body: CheckoutPayloadSchema }),
+  checkout,
+);
 
 router.get(
   "/:orderId",
+  readLimiter,
   validate({ params: OrderParamsSchema }),
   getUserOrderById,
 );

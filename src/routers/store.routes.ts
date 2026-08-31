@@ -11,19 +11,22 @@ import {
   getStoreDetails,
   updateStore,
 } from "../controllers/store.controller";
+import { readLimiter } from "../middlewares/rate.limit.middlewares";
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(getStoreDetails)
+  .get(readLimiter, getStoreDetails)
   .post(
+    readLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({ body: CreateStoreInputSchema }),
     createStore,
   )
   .patch(
+    readLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({ body: UpdateStoreInputSchema }),

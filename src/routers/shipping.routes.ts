@@ -11,24 +11,35 @@ import {
   getShippingDetails,
   updateShipping,
 } from "../controllers/shipping.controller";
+import {
+  readLimiter,
+  writeLimiter,
+} from "../middlewares/rate.limit.middlewares";
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(getShippingDetails)
+  .get(readLimiter, getShippingDetails)
   .post(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({ body: CreateShippingInputSchema }),
     createShipping,
   )
   .patch(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({ body: UpdateShippingInputSchema }),
     updateShipping,
   )
-  .delete(protectRoute, authorizeRoles(["admin"]), deleteShipping);
+  .delete(
+    writeLimiter,
+    protectRoute,
+    authorizeRoles(["admin"]),
+    deleteShipping,
+  );
 
 export default router;

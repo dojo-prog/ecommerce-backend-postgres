@@ -8,6 +8,10 @@ import {
   getPaymentByOrderId,
   payOrder,
 } from "../controllers/payment.controller";
+import {
+  readLimiter,
+  writeLimiter,
+} from "../middlewares/rate.limit.middlewares";
 
 const router = express.Router();
 
@@ -15,11 +19,16 @@ router.use(protectRoute);
 
 router
   .route("/orders/:orderId/payments")
-  .get(validate({ params: OrderParamsSchema }), getPaymentByOrderId)
-  .post(validate({ params: OrderParamsSchema }), payOrder);
+  .get(
+    readLimiter,
+    validate({ params: OrderParamsSchema }),
+    getPaymentByOrderId,
+  )
+  .post(writeLimiter, validate({ params: OrderParamsSchema }), payOrder);
 
 router.get(
   "/payments/:paymentId",
+  readLimiter,
   validate({ params: PaymentParamsSchema }),
   getPaymentById,
 );

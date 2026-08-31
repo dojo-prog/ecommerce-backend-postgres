@@ -15,6 +15,10 @@ import {
   updateItemQuantity,
 } from "../controllers/cart_items.controller";
 import { ProductParamsSchema } from "../schemas/products";
+import {
+  readLimiter,
+  writeLimiter,
+} from "../middlewares/rate.limit.middlewares";
 
 const router = express.Router();
 
@@ -22,16 +26,21 @@ router.use(protectRoute);
 
 router
   .route("/")
-  .get(validate({ query: CartItemQuerySchema }), getCartItems)
-  .post(validate({ body: AddToCartInputSchema }), addToCart);
+  .get(readLimiter, validate({ query: CartItemQuerySchema }), getCartItems)
+  .post(writeLimiter, validate({ body: AddToCartInputSchema }), addToCart);
 
 router
   .route("/:productId")
-  .get(validate({ params: ProductParamsSchema }), getCartItemById)
+  .get(readLimiter, validate({ params: ProductParamsSchema }), getCartItemById)
   .patch(
+    writeLimiter,
     validate({ params: ProductParamsSchema, body: UpdateCartItemInputSchema }),
     updateItemQuantity,
   )
-  .delete(validate({ params: ProductParamsSchema }), removeFromCart);
+  .delete(
+    writeLimiter,
+    validate({ params: ProductParamsSchema }),
+    removeFromCart,
+  );
 
 export default router;

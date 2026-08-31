@@ -19,10 +19,15 @@ import {
   getSubcategoryBySlug,
   updateSubcategory,
 } from "../controllers/subcategory.controller";
+import {
+  readLimiter,
+  writeLimiter,
+} from "../middlewares/rate.limit.middlewares";
 
 const router = express.Router();
 
 router.route("/:categorySlug/subcategory").get(
+  readLimiter,
   validate({
     params: CategorySlugParamsSchema,
     query: SubcategoryQuerySchema,
@@ -32,6 +37,7 @@ router.route("/:categorySlug/subcategory").get(
 
 router.post(
   "/:categoryId/subcategory",
+  writeLimiter,
   protectRoute,
   authorizeRoles(["admin"]),
   validate({
@@ -43,6 +49,7 @@ router.post(
 
 router.get(
   "/:categorySlug/subcategory/:subcategorySlug",
+  readLimiter,
   validate({
     params: CategorySlugParamsSchema.merge(SubcategorySlugParamsSchema),
   }),
@@ -52,6 +59,7 @@ router.get(
 router
   .route("/:categoryId/subcategory/:subcategoryId")
   .patch(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({
@@ -61,6 +69,7 @@ router
     updateSubcategory,
   )
   .delete(
+    writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     validate({
