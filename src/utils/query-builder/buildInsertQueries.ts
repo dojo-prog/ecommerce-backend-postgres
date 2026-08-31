@@ -4,8 +4,8 @@ interface BuildInsertQueriesResult {
   values: unknown[];
 }
 
-const buildInsertQueries = (
-  payload: Record<string, unknown>,
+const buildInsertQueries = <T extends object>(
+  payload: T,
 ): BuildInsertQueriesResult => {
   const columns: string[] = [];
   const placeholders: string[] = [];
