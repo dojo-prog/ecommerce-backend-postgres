@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { AccessTokenPayload } from "../schemas/auth";
 import AppError from "../utils/AppError";
 import ENV from "../config/env";
 import { Middleware } from "../types/handlers";
@@ -7,6 +6,7 @@ import pool from "../database/db";
 import { UserRole } from "../schemas/users";
 import { AUTH_TOKENS } from "../constants/auth";
 import { USER_PUBLIC_PROJECTION } from "../database/queries/users";
+import { AccessTokenPayload } from "../types/entities/auth.types";
 
 const protectRoute: Middleware = async (req, res, next) => {
   const access_token = req.cookies[AUTH_TOKENS.ACCESS_TOKEN.name];
