@@ -1,7 +1,7 @@
 import AppError from "../utils/AppError";
 import pool from "../database/db";
 import { OrderItem } from "../schemas/order_items";
-import { OrderQueryPayload, OrderWithItems } from "../schemas/orders";
+import { OrderQuery, OrderWithItems } from "../schemas/orders";
 import { calculateDistanceMeters } from "../utils/calculateDistanceMeters";
 
 import * as orderItemService from "../services/order_item.service";
@@ -17,7 +17,7 @@ import * as orderItemRepository from "../repositories/order_item.repository";
 
 export const getUserOrders = async (
   userId: string,
-  filters: OrderQueryPayload,
+  filters: OrderQuery,
 ): Promise<OrderWithItems[]> => {
   const orders = await orderRepository.find(userId, filters);
 

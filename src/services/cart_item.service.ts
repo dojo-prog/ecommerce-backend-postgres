@@ -1,15 +1,15 @@
 import {
-  AddToCartPayload,
-  CartItemQueryPayload,
-  CartItemQueryResult,
-  CartItemRelations,
-  UpdateCartItemPayload,
+  AddToCartBody,
+  CartItemQuery,
+  CartItemWithRelations,
+  UpdateCartItemBody,
 } from "../schemas/cart_items";
 import AppError from "../utils/AppError";
 
 import * as cartItemRepository from "../repositories/cart_item.repository";
 import * as productRepository from "../repositories/product.repository.js";
 import * as cartService from "../services/cart.service";
+import { GetCartItemsResult } from "../types/entities/cart_item.types";
 
 // =======================================
 // HELPER
@@ -30,8 +30,8 @@ const checkQuantity = (stockQuantity: number, requestedQuantity: number) => {
 
 export const getCartItems = async (
   userId: string,
-  filters: CartItemQueryPayload,
-): Promise<CartItemQueryResult> => {
+  filters: CartItemQuery,
+): Promise<GetCartItemsResult> => {
   const { cart_items, total } = await cartItemRepository.find(userId, filters);
 
   const { page, limit } = filters;
@@ -49,8 +49,8 @@ export const getCartItems = async (
 
 export const addToCart = async (
   userId: string,
-  payload: AddToCartPayload,
-): Promise<CartItemRelations> => {
+  payload: AddToCartBody,
+): Promise<CartItemWithRelations> => {
   const { product_id } = payload;
 
   const product = await productRepository.findById(product_id);
@@ -97,8 +97,8 @@ export const getCartItemById = async (userId: string, productId: string) => {
 export const updateItemQuantity = async (
   userId: string,
   productId: string,
-  payload: UpdateCartItemPayload,
-): Promise<CartItemRelations | void> => {
+  payload: UpdateCartItemBody,
+): Promise<CartItemWithRelations | void> => {
   const product = await productRepository.findById(productId);
 
   if (!product) {

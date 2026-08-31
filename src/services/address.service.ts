@@ -1,7 +1,6 @@
 import {
-  CreateAddressPayload,
-  UpdateAddressPayload,
-  UpdateAddressResult,
+  CreateAddressBody,
+  UpdateAddressBody,
   UserAddress,
 } from "../schemas/addresses";
 import AppError from "../utils/AppError";
@@ -9,6 +8,7 @@ import generateChanges from "../utils/generateChanges";
 import geocodeAddress from "../integrations/nominatim/geocoding";
 
 import * as addressRepository from "../repositories/address.repository";
+import { UpdateAddressResult } from "../types/entities/address.types";
 
 export const getUserAddresses = async (
   userId: string,
@@ -18,7 +18,7 @@ export const getUserAddresses = async (
 
 export const createAddress = async (
   userId: string,
-  payload: CreateAddressPayload,
+  payload: CreateAddressBody,
 ): Promise<UserAddress> => {
   const addresses = await addressRepository.find(userId);
 
@@ -57,7 +57,7 @@ export const getAddressById = async (
 export const updateAddress = async (
   userId: string,
   addressId: string,
-  payload: UpdateAddressPayload,
+  payload: UpdateAddressBody,
 ): Promise<UpdateAddressResult> => {
   const address = await addressRepository.findById(userId, addressId);
 

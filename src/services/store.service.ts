@@ -1,22 +1,16 @@
 import geocodeAddress from "../integrations/nominatim/geocoding";
-import {
-  CreateStorePayload,
-  Store,
-  UpdateStorePayload,
-  UpdateStoreResult,
-} from "../schemas/stores";
+import { CreateStoreBody, Store, UpdateStoreBody } from "../schemas/stores";
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
 
 import * as storeRepository from "../repositories/store.repository";
+import { UpdateStoreResult } from "../types/entities/store.types";
 
 export const getStoreDetails = async () => {
   return await storeRepository.find();
 };
 
-export const createStore = async (
-  payload: CreateStorePayload,
-): Promise<Store> => {
+export const createStore = async (payload: CreateStoreBody): Promise<Store> => {
   const existing = await storeRepository.find();
 
   if (existing) {
@@ -31,7 +25,7 @@ export const createStore = async (
 };
 
 export const updateStore = async (
-  payload: UpdateStorePayload,
+  payload: UpdateStoreBody,
 ): Promise<UpdateStoreResult> => {
   const store = await storeRepository.find();
 

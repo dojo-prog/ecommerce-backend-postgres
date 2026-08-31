@@ -1,11 +1,5 @@
 import jwt from "jsonwebtoken";
-import {
-  LoginPayload,
-  LoginServiceResult,
-  RefreshTokenPayload,
-  RegisterPayload,
-  RegisterServiceResult,
-} from "../schemas/auth";
+import { LoginBody, RegisterBody } from "../schemas/auth";
 import AppError from "../utils/AppError";
 import bcrypt from "bcryptjs";
 import {
@@ -16,10 +10,15 @@ import ENV from "../config/env";
 import { getOrCreateCart } from "../services/cart.service";
 
 import * as authRepository from "../repositories/auth.repository";
+import {
+  LoginResult,
+  RefreshTokenPayload,
+  RegisterResult,
+} from "../types/entities/auth.types";
 
 export const register = async (
-  payload: RegisterPayload,
-): Promise<RegisterServiceResult> => {
+  payload: RegisterBody,
+): Promise<RegisterResult> => {
   const { username, email, password } = payload;
 
   const existingUsername = await authRepository.findByUsername(username);
@@ -54,9 +53,7 @@ export const register = async (
   };
 };
 
-export const login = async (
-  payload: LoginPayload,
-): Promise<LoginServiceResult> => {
+export const login = async (payload: LoginBody): Promise<LoginResult> => {
   const { email, password } = payload;
 
   const user = await authRepository.findPrivateByEmail(email);

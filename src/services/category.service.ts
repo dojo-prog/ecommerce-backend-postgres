@@ -1,19 +1,19 @@
 import {
   Category,
-  CategoryQueryPayload,
-  CategoryQueryResult,
-  CreateCategoryPayload,
-  UpdateCategoryPayload,
+  CategoryQuery,
+  CreateCategoryBody,
+  UpdateCategoryBody,
 } from "../schemas/categories";
 import generateSlug from "../utils/generateSlug";
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
 
 import * as categoryRepository from "../repositories/category.repository";
+import { GetCategoriesResult } from "../types/entities/category.types";
 
 export const getCategories = async (
-  filters: CategoryQueryPayload,
-): Promise<CategoryQueryResult> => {
+  filters: CategoryQuery,
+): Promise<GetCategoriesResult> => {
   const { categories, total } = await categoryRepository.find(filters);
 
   const { page, limit } = filters;
@@ -30,7 +30,7 @@ export const getCategories = async (
 };
 
 export const createCategory = async (
-  payload: CreateCategoryPayload,
+  payload: CreateCategoryBody,
 ): Promise<Category> => {
   const slug = generateSlug(payload.name);
 
@@ -51,7 +51,7 @@ export const getCategoryBySlug = async (
 
 export const updateCategory = async (
   categoryId: string,
-  payload: UpdateCategoryPayload,
+  payload: UpdateCategoryBody,
 ): Promise<Category> => {
   const category = await categoryRepository.findById(categoryId);
 

@@ -1,4 +1,4 @@
-import { Cart } from "../schemas/cart";
+import { Cart } from "../schemas/carts";
 
 import * as cartRepository from "../repositories/cart.repository";
 

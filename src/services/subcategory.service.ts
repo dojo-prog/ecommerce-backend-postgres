@@ -1,10 +1,8 @@
-import { UpdateCategoryPayload } from "../schemas/categories";
+import { UpdateCategoryBody } from "../schemas/categories";
 import {
-  CreateSubcategoryPayload,
+  CreateSubcategoryBody,
   Subcategory,
-  SubcategoryQueryPayload,
-  SubcategoryQueryResult,
-  UpdateSubcategoryResult,
+  SubcategoryQuery,
 } from "../schemas/subcategories";
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
@@ -12,11 +10,15 @@ import generateSlug from "../utils/generateSlug";
 
 import * as subcategoryRepository from "../repositories/subcategory.repository";
 import * as categoryRepository from "../repositories/category.repository";
+import {
+  GetSubcategoriesResult,
+  UpdateSubcategoryResult,
+} from "../types/entities/subcategory.types";
 
 export const getSubcategories = async (
   categorySlug: string,
-  filters: SubcategoryQueryPayload,
-): Promise<SubcategoryQueryResult> => {
+  filters: SubcategoryQuery,
+): Promise<GetSubcategoriesResult> => {
   const category = await categoryRepository.findBySlug(categorySlug);
 
   if (!category) {
@@ -43,7 +45,7 @@ export const getSubcategories = async (
 
 export const createSubcategory = async (
   categoryId: string,
-  payload: CreateSubcategoryPayload,
+  payload: CreateSubcategoryBody,
 ): Promise<Subcategory> => {
   const { name } = payload;
 
@@ -84,7 +86,7 @@ export const getSubcategoryBySlug = async (
 export const updateSubcategory = async (
   categoryId: string,
   subcategoryId: string,
-  payload: UpdateCategoryPayload,
+  payload: UpdateCategoryBody,
 ): Promise<UpdateSubcategoryResult> => {
   const subcategory = await subcategoryRepository.findById(
     categoryId,

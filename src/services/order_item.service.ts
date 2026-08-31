@@ -1,11 +1,12 @@
 import { PoolClient } from "pg";
-import { CreateOrderItemPayload, OrderItem } from "../schemas/order_items";
+import { OrderItem } from "../schemas/order_items";
 
 import * as orderItemRepository from "../repositories/order_item.repository";
+import { CreateOrderItemData } from "../types/entities/order_item.types";
 
 export const createOrderItem = async (
   client: PoolClient,
-  payload: CreateOrderItemPayload,
+  payload: CreateOrderItemData,
 ): Promise<void> => {
   await orderItemRepository.add(client, payload);
 };

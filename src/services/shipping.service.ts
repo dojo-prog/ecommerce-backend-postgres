@@ -1,21 +1,21 @@
 import {
-  CreateShippingPayload,
+  CreateShippingBody,
   Shipping,
-  UpdateShippingPayload,
-  UpdateShippingResult,
-} from "../schemas/shipping";
+  UpdateShippingBody,
+} from "../schemas/shippings";
 
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
 
 import * as shippingRepository from "../repositories/shipping.repository";
+import { UpdateShippingResult } from "../types/entities/shipping.types";
 
 export const getShippingDetails = async () => {
   return await shippingRepository.find();
 };
 
 export const createShipping = async (
-  payload: CreateShippingPayload,
+  payload: CreateShippingBody,
 ): Promise<Shipping> => {
   const existing = await shippingRepository.find();
 
@@ -27,7 +27,7 @@ export const createShipping = async (
 };
 
 export const updateShipping = async (
-  payload: UpdateShippingPayload,
+  payload: UpdateShippingBody,
 ): Promise<UpdateShippingResult> => {
   const shipping = await shippingRepository.find();
 

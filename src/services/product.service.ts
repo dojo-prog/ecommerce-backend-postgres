@@ -1,11 +1,8 @@
 import {
-  CreateProductFinalPayload,
-  CreateProductPayload,
-  ProductQueryPayload,
-  ProductQueryResult,
-  ProductRelations,
-  UpdateProductPayload,
-  UpdateProductResult,
+  CreateProductBody,
+  ProductQuery,
+  ProductWithRelations,
+  UpdateProductBody,
 } from "../schemas/products";
 import { createInventory } from "../services/inventory.service";
 import AppError from "../utils/AppError";
@@ -14,10 +11,15 @@ import generateChanges from "../utils/generateChanges";
 import { deleteImage } from "../integrations/cloudinary/delete";
 
 import * as productRepository from "../repositories/product.repository";
+import {
+  CreateProductData,
+  GetProductsResult,
+  UpdateProductResult,
+} from "../types/entities/product.types";
 
 export const getProducts = async (
-  filters: ProductQueryPayload,
-): Promise<ProductQueryResult> => {
+  filters: ProductQuery,
+): Promise<GetProductsResult> => {
   const { products, total } = await productRepository.find(filters);
 
   const { page, limit } = filters;
@@ -34,9 +36,9 @@ export const getProducts = async (
 };
 
 export const createProduct = async (
-  payload: CreateProductPayload,
+  payload: CreateProductBody,
   thumbnail?: Express.Multer.File,
-): Promise<ProductRelations> => {
+): Promise<ProductWithRelations> => {
   const existing = await productRepository.findByName(payload.name);
 
   if (existing) {
@@ -45,7 +47,7 @@ export const createProduct = async (
 
   const { initial_quantity, ...rest } = payload;
 
-  const finalPayload: CreateProductFinalPayload = {
+  const finalPayload: CreateProductData = {
     ...rest,
   };
 
@@ -81,7 +83,7 @@ export const getProductById = async (productId: string) => {
 
 export const updateProduct = async (
   productId: string,
-  payload: UpdateProductPayload,
+  payload: UpdateProductBody,
   thumbnail?: Express.Multer.File,
 ): Promise<UpdateProductResult> => {
   const product = await productRepository.findById(productId);
@@ -134,7 +136,7 @@ export const updateProduct = async (
 
 export const deleteProduct = async (
   productId: string,
-): Promise<ProductRelations> => {
+): Promise<ProductWithRelations> => {
   const product = await productRepository.findById(productId);
 
   if (!product) {
