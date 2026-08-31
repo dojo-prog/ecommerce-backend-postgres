@@ -22,10 +22,10 @@ export const UpdateInventoryBodySchema = z.object({
 // TYPES
 // =======================================
 
-export type CreateInventoryPayload = z.infer<typeof CreateInventoryBodySchema>;
+export type CreateInventoryBody = z.infer<typeof CreateInventoryBodySchema>;
 
-export type AddStockToInventoryPayload = z.infer<
+export type AddStockToInventoryBody = z.infer<
   typeof AddStockToInventoryBodySchema
 >;
 
-export type UpdateInventoryPayload = z.infer<typeof UpdateInventoryBodySchema>;
+export type UpdateInventoryBody = z.infer<typeof UpdateInventoryBodySchema>;
