@@ -2,11 +2,11 @@ import jwt from "jsonwebtoken";
 import AppError from "../utils/AppError";
 import ENV from "../config/env";
 import { Middleware } from "../types/handlers";
-import pool from "../database/db";
 import { UserRole } from "../schemas/users";
 import { AUTH_TOKENS } from "../constants/auth";
-import { USER_PUBLIC_PROJECTION } from "../database/queries/users";
 import { AccessTokenPayload } from "../types/entities/auth.types";
+
+import * as authRepository from "../repositories/auth.repository";
 
 const protectRoute: Middleware = async (req, res, next) => {
   const access_token = req.cookies[AUTH_TOKENS.ACCESS_TOKEN.name];
@@ -26,16 +26,7 @@ const protectRoute: Middleware = async (req, res, next) => {
     return next(new AppError(401, "Unauthorized"));
   }
 
-  const { rows } = await pool.query(
-    `
-    SELECT ${USER_PUBLIC_PROJECTION}
-    FROM users 
-    WHERE id = $1
-    `,
-    [decoded.id],
-  );
-
-  const user = rows[0];
+  const user = await authRepository.findById(decoded.id);
 
   if (!user) {
     return next(new AppError(401, "Unauthorized"));
