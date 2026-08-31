@@ -1,6 +1,6 @@
 import { Controller } from "../types/handlers";
 import * as authService from "../services/auth.service";
-import { LoginPayload, RegisterPayload } from "../schemas/auth";
+import { LoginBody, RegisterBody } from "../schemas/auth";
 import setAuthCookies from "../utils/auth/setAuthCookies";
 import { AUTH_TOKENS, BASE_COOKIE_OPTIONS } from "../constants/auth";
 
@@ -17,7 +17,7 @@ export const getCurrentUser: Controller = async (req, res, next) => {
 export const register: Controller = async (req, res, next) => {
   try {
     const { user, access_token, refresh_token } = await authService.register(
-      req.body as RegisterPayload,
+      req.body as RegisterBody,
     );
 
     setAuthCookies(res, access_token, refresh_token);
@@ -33,7 +33,7 @@ export const register: Controller = async (req, res, next) => {
 export const login: Controller = async (req, res, next) => {
   try {
     const { user, access_token, refresh_token } = await authService.login(
-      req.body as LoginPayload,
+      req.body as LoginBody,
     );
 
     setAuthCookies(res, access_token, refresh_token);

@@ -1,9 +1,6 @@
 import { Controller } from "../types/handlers";
 import * as shippingService from "../services/shipping.service";
-import {
-  CreateShippingPayload,
-  UpdateShippingPayload,
-} from "../schemas/shipping";
+import { CreateShippingBody, UpdateShippingBody } from "../schemas/shippings";
 
 export const getShippingDetails: Controller = async (req, res, next) => {
   try {
@@ -18,7 +15,7 @@ export const getShippingDetails: Controller = async (req, res, next) => {
 export const createShipping: Controller = async (req, res, next) => {
   try {
     const shipping = await shippingService.createShipping(
-      req.body as CreateShippingPayload,
+      req.body as CreateShippingBody,
     );
 
     res.status(201).json({
@@ -34,7 +31,7 @@ export const createShipping: Controller = async (req, res, next) => {
 export const updateShipping: Controller = async (req, res, next) => {
   try {
     const data = await shippingService.updateShipping(
-      req.body as UpdateShippingPayload,
+      req.body as UpdateShippingBody,
     );
 
     res

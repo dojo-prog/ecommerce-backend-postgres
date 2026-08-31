@@ -1,9 +1,6 @@
 import { Controller } from "../types/handlers";
 import * as addressService from "../services/address.service";
-import {
-  CreateAddressPayload,
-  UpdateAddressPayload,
-} from "../schemas/addresses";
+import { CreateAddressBody, UpdateAddressBody } from "../schemas/addresses";
 
 export const getUserAddresses: Controller = async (req, res, next) => {
   try {
@@ -19,7 +16,7 @@ export const createAddress: Controller = async (req, res, next) => {
   try {
     const address = await addressService.createAddress(
       req.user!.id,
-      req.body as CreateAddressPayload,
+      req.body as CreateAddressBody,
     );
 
     res
@@ -48,7 +45,7 @@ export const updateAddress: Controller = async (req, res, next) => {
     const address = await addressService.updateAddress(
       req.user!.id,
       req.params.addressId as string,
-      req.body as UpdateAddressPayload,
+      req.body as UpdateAddressBody,
     );
 
     res
@@ -81,13 +78,11 @@ export const setToDefault: Controller = async (req, res, next) => {
       req.params.addressId as string,
     );
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Address set to default",
-        data: { address },
-      });
+    res.status(200).json({
+      success: true,
+      message: "Address set to default",
+      data: { address },
+    });
   } catch (error) {
     next(error);
   }

@@ -1,9 +1,9 @@
 import { Controller } from "../types/handlers";
 import * as productService from "../services/product.service";
 import {
-  CreateProductPayload,
+  CreateProductBody,
   ProductQuerySchema,
-  UpdateProductPayload,
+  UpdateProductBody,
 } from "../schemas/products";
 
 export const getProducts: Controller = async (req, res, next) => {
@@ -21,7 +21,7 @@ export const getProducts: Controller = async (req, res, next) => {
 export const createProduct: Controller = async (req, res, next) => {
   try {
     const product = await productService.createProduct(
-      req.body as CreateProductPayload,
+      req.body as CreateProductBody,
       req.file,
     );
 
@@ -49,7 +49,7 @@ export const updateProduct: Controller = async (req, res, next) => {
   try {
     const data = await productService.updateProduct(
       req.params.productId as string,
-      req.body as UpdateProductPayload,
+      req.body as UpdateProductBody,
       req.file,
     );
 

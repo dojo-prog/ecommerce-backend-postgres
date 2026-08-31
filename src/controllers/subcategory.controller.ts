@@ -1,9 +1,9 @@
 import { Controller } from "../types/handlers";
 import * as subcategoryService from "../services/subcategory.service";
 import {
-  CreateSubcategoryPayload,
+  CreateSubcategoryBody,
   SubcategoryQuerySchema,
-  UpdateSubcategoryPayload,
+  UpdateSubcategoryBody,
 } from "../schemas/subcategories";
 
 export const getSubcategories: Controller = async (req, res, next) => {
@@ -23,7 +23,7 @@ export const createSubcategory: Controller = async (req, res, next) => {
   try {
     const subcategory = await subcategoryService.createSubcategory(
       req.params.categoryId as string,
-      req.body as CreateSubcategoryPayload,
+      req.body as CreateSubcategoryBody,
     );
 
     res.status(201).json({
@@ -54,7 +54,7 @@ export const updateSubcategory: Controller = async (req, res, next) => {
     const data = await subcategoryService.updateSubcategory(
       req.params.categoryId as string,
       req.params.subcategoryId as string,
-      req.body as UpdateSubcategoryPayload,
+      req.body as UpdateSubcategoryBody,
     );
 
     res.status(200).json({ success: true, message: "Category updated", data });

@@ -2,8 +2,8 @@ import { Controller } from "../types/handlers";
 import * as categoryService from "../services/category.service";
 import {
   CategoryQuerySchema,
-  CreateCategoryPayload,
-  UpdateCategoryPayload,
+  CreateCategoryBody,
+  UpdateCategoryBody,
 } from "../schemas/categories";
 
 export const getCategories: Controller = async (req, res, next) => {
@@ -21,7 +21,7 @@ export const getCategories: Controller = async (req, res, next) => {
 export const createCategory: Controller = async (req, res, next) => {
   try {
     const category = await categoryService.createCategory(
-      req.body as CreateCategoryPayload,
+      req.body as CreateCategoryBody,
     );
 
     res
@@ -48,7 +48,7 @@ export const updateCategory: Controller = async (req, res, next) => {
   try {
     const data = await categoryService.updateCategory(
       req.params.categoryId as string,
-      req.body as UpdateCategoryPayload,
+      req.body as UpdateCategoryBody,
     );
 
     res.status(200).json({ success: true, message: "Category updated", data });
