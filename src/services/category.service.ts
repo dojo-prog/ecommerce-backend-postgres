@@ -5,15 +5,16 @@ import {
   CreateCategoryPayload,
   UpdateCategoryPayload,
 } from "../schemas/categories";
-import * as categoryModel from "../models/category.model";
 import generateSlug from "../utils/generateSlug";
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
 
+import * as categoryRepository from "../repositories/category.repository";
+
 export const getCategories = async (
   filters: CategoryQueryPayload,
 ): Promise<CategoryQueryResult> => {
-  const { categories, total } = await categoryModel.find(filters);
+  const { categories, total } = await categoryRepository.find(filters);
 
   const { page, limit } = filters;
 
@@ -33,13 +34,13 @@ export const createCategory = async (
 ): Promise<Category> => {
   const slug = generateSlug(payload.name);
 
-  return await categoryModel.add({ ...payload, slug });
+  return await categoryRepository.add({ ...payload, slug });
 };
 
 export const getCategoryBySlug = async (
   categorySlug: string,
 ): Promise<Category> => {
-  const category = await categoryModel.findBySlug(categorySlug);
+  const category = await categoryRepository.findBySlug(categorySlug);
 
   if (!category) {
     throw new AppError(404, "Category not found");
@@ -52,7 +53,7 @@ export const updateCategory = async (
   categoryId: string,
   payload: UpdateCategoryPayload,
 ): Promise<Category> => {
-  const category = await categoryModel.findById(categoryId);
+  const category = await categoryRepository.findById(categoryId);
 
   if (!category) {
     throw new AppError(404, "Category not found");
@@ -65,17 +66,17 @@ export const updateCategory = async (
     old_values.slug = category.slug;
   }
 
-  return await categoryModel.update(categoryId, new_values);
+  return await categoryRepository.update(categoryId, new_values);
 };
 
 export const deleteCategory = async (categoryId: string) => {
-  const category = await categoryModel.findById(categoryId);
+  const category = await categoryRepository.findById(categoryId);
 
   if (!category) {
     throw new AppError(404, "Category not found");
   }
 
-  await categoryModel.remove(categoryId);
+  await categoryRepository.remove(categoryId);
 
   return category;
 };

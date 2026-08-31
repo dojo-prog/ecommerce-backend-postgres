@@ -7,17 +7,18 @@ import {
   UpdateProductPayload,
   UpdateProductResult,
 } from "../schemas/products";
-import * as productModel from "../models/product.model";
 import { createInventory } from "../services/inventory.service";
 import AppError from "../utils/AppError";
 import { uploadMulterImage } from "../integrations/cloudinary/upload";
 import generateChanges from "../utils/generateChanges";
 import { deleteImage } from "../integrations/cloudinary/delete";
 
+import * as productRepository from "../repositories/product.repository";
+
 export const getProducts = async (
   filters: ProductQueryPayload,
 ): Promise<ProductQueryResult> => {
-  const { products, total } = await productModel.find(filters);
+  const { products, total } = await productRepository.find(filters);
 
   const { page, limit } = filters;
 
@@ -36,7 +37,7 @@ export const createProduct = async (
   payload: CreateProductPayload,
   thumbnail?: Express.Multer.File,
 ): Promise<ProductRelations> => {
-  const existing = await productModel.findByName(payload.name);
+  const existing = await productRepository.findByName(payload.name);
 
   if (existing) {
     throw new AppError(400, `A product named ${payload.name} already exists`);
@@ -58,18 +59,18 @@ export const createProduct = async (
     finalPayload.thumbnail_public_id = public_id;
   }
 
-  const product = await productModel.add(finalPayload);
+  const product = await productRepository.add(finalPayload);
 
   await createInventory(
     product.id,
     initial_quantity !== undefined ? initial_quantity : 0,
   );
 
-  return await productModel.findById(product.id);
+  return await productRepository.findById(product.id);
 };
 
 export const getProductById = async (productId: string) => {
-  const product = await productModel.findById(productId);
+  const product = await productRepository.findById(productId);
 
   if (!product) {
     throw new AppError(404, "Product not found");
@@ -83,7 +84,7 @@ export const updateProduct = async (
   payload: UpdateProductPayload,
   thumbnail?: Express.Multer.File,
 ): Promise<UpdateProductResult> => {
-  const product = await productModel.findById(productId);
+  const product = await productRepository.findById(productId);
 
   if (!product) {
     throw new AppError(404, "Product not found");
@@ -93,7 +94,9 @@ export const updateProduct = async (
 
   // Existing name check
   if (new_values.name) {
-    const existing = await productModel.findByName(new_values.name as string);
+    const existing = await productRepository.findByName(
+      new_values.name as string,
+    );
 
     if (existing) {
       throw new AppError(400, `A product named ${payload.name} already exists`);
@@ -120,7 +123,7 @@ export const updateProduct = async (
     }
   }
 
-  const updated = await productModel.findById(productId);
+  const updated = await productRepository.findById(productId);
 
   return {
     product: updated,
@@ -132,7 +135,7 @@ export const updateProduct = async (
 export const deleteProduct = async (
   productId: string,
 ): Promise<ProductRelations> => {
-  const product = await productModel.findById(productId);
+  const product = await productRepository.findById(productId);
 
   if (!product) {
     throw new AppError(404, "Product not found");
@@ -142,7 +145,7 @@ export const deleteProduct = async (
     deleteImage(product.thumbnail_public_id);
   }
 
-  await productModel.remove(productId);
+  await productRepository.remove(productId);
 
   return product;
 };

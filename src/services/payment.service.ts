@@ -1,19 +1,19 @@
 import { OrderWithItems } from "../schemas/orders";
 import { Payment } from "../schemas/payments";
 import AppError from "../utils/AppError";
+import processPayment from "../integrations/mockPayment/process";
 
-import * as paymentModel from "../models/payment.model";
-import * as orderModel from "../models/order.model";
+import * as paymentRepository from "../repositories/payment.repository";
+import * as orderRepository from "../repositories/order.repository";
 
 import * as orderService from "../services/order.service";
-import processPayment from "../integrations/mockPayment/process";
 
 export const payOrder = async (
   userId: string,
   orderId: string,
   shouldFail = false,
 ): Promise<OrderWithItems> => {
-  const order = await orderModel.findById(userId, orderId);
+  const order = await orderRepository.findById(userId, orderId);
 
   if (!order) {
     throw new AppError(404, "Order not found");
@@ -31,7 +31,7 @@ export const payOrder = async (
     throw new AppError(402, "Payment failed");
   }
 
-  const updatedOrder = await orderModel.markAsPaid(orderId);
+  const updatedOrder = await orderRepository.markAsPaid(orderId);
 
   return await orderService.getUserOrderById(userId, updatedOrder.id);
 };
@@ -39,7 +39,7 @@ export const payOrder = async (
 export const getPaymentByOrderId = async (
   orderId: string,
 ): Promise<Payment> => {
-  const payment = await paymentModel.findByOrderId(orderId);
+  const payment = await paymentRepository.findByOrderId(orderId);
 
   if (!payment) {
     throw new AppError(404, "Payment not found");
@@ -49,7 +49,7 @@ export const getPaymentByOrderId = async (
 };
 
 export const getPaymentById = async (paymentId: string): Promise<Payment> => {
-  const payment = await paymentModel.findById(paymentId);
+  const payment = await paymentRepository.findById(paymentId);
 
   if (!payment) {
     throw new AppError(404, "Payment not found");

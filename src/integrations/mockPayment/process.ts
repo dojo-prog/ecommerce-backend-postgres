@@ -1,5 +1,5 @@
 import { CreatePaymentPayload } from "../../schemas/payments";
-import * as paymentModel from "../../models/payment.model";
+import * as paymentModel from "../../repositories/payment.repository";
 
 export const processPayment = async (
   orderId: string,

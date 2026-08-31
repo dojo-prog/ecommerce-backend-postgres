@@ -1,5 +1,4 @@
 import geocodeAddress from "../integrations/nominatim/geocoding";
-import * as storeModel from "../models/store.model";
 import {
   CreateStorePayload,
   Store,
@@ -9,14 +8,16 @@ import {
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
 
+import * as storeRepository from "../repositories/store.repository";
+
 export const getStoreDetails = async () => {
-  return await storeModel.find();
+  return await storeRepository.find();
 };
 
 export const createStore = async (
   payload: CreateStorePayload,
 ): Promise<Store> => {
-  const existing = await storeModel.find();
+  const existing = await storeRepository.find();
 
   if (existing) {
     throw new AppError(400, "A store has already been created");
@@ -26,13 +27,13 @@ export const createStore = async (
 
   const { latitude, longitude } = await geocodeAddress(address);
 
-  return await storeModel.create({ ...payload, latitude, longitude });
+  return await storeRepository.create({ ...payload, latitude, longitude });
 };
 
 export const updateStore = async (
   payload: UpdateStorePayload,
 ): Promise<UpdateStoreResult> => {
-  const store = await storeModel.find();
+  const store = await storeRepository.find();
 
   if (!store) {
     throw new AppError(400, "No store has yet to be created");
@@ -50,7 +51,7 @@ export const updateStore = async (
 
   const { old_values, new_values } = generateChanges(store, finalPayload);
 
-  const updated = await storeModel.update(store.id, new_values);
+  const updated = await storeRepository.update(store.id, new_values);
 
   return {
     store: updated,
@@ -60,13 +61,13 @@ export const updateStore = async (
 };
 
 export const deleteStore = async (): Promise<Store> => {
-  const store = await storeModel.find();
+  const store = await storeRepository.find();
 
   if (!store) {
     throw new AppError(400, "No store has yet to be created");
   }
 
-  await storeModel.remove(store.id);
+  await storeRepository.remove(store.id);
 
   return store;
 };

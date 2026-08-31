@@ -4,22 +4,23 @@ import {
   UpdateAddressResult,
   UserAddress,
 } from "../schemas/addresses";
-import * as addressModel from "../models/address.model";
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
 import geocodeAddress from "../integrations/nominatim/geocoding";
 
+import * as addressRepository from "../repositories/address.repository";
+
 export const getUserAddresses = async (
   userId: string,
 ): Promise<UserAddress[]> => {
-  return await addressModel.find(userId);
+  return await addressRepository.find(userId);
 };
 
 export const createAddress = async (
   userId: string,
   payload: CreateAddressPayload,
 ): Promise<UserAddress> => {
-  const addresses = await addressModel.find(userId);
+  const addresses = await addressRepository.find(userId);
 
   if (addresses.length === 3) {
     throw new AppError(
@@ -37,14 +38,14 @@ export const createAddress = async (
     longitude,
   };
 
-  return await addressModel.add(finalPayload);
+  return await addressRepository.add(finalPayload);
 };
 
 export const getAddressById = async (
   userId: string,
   addressId: string,
 ): Promise<UserAddress> => {
-  const address = await addressModel.findById(userId, addressId);
+  const address = await addressRepository.findById(userId, addressId);
 
   if (!address) {
     throw new AppError(404, "Address not found");
@@ -58,7 +59,7 @@ export const updateAddress = async (
   addressId: string,
   payload: UpdateAddressPayload,
 ): Promise<UpdateAddressResult> => {
-  const address = await addressModel.findById(userId, addressId);
+  const address = await addressRepository.findById(userId, addressId);
 
   if (!address) {
     throw new AppError(404, "Address not found");
@@ -76,7 +77,7 @@ export const updateAddress = async (
   new_values.latitude = latitude;
   new_values.longitude = longitude;
 
-  const updated = await addressModel.update(userId, addressId, new_values);
+  const updated = await addressRepository.update(userId, addressId, new_values);
 
   return {
     address: updated,
@@ -89,19 +90,19 @@ export const deleteAddress = async (
   userId: string,
   addressId: string,
 ): Promise<UserAddress> => {
-  const address = await addressModel.findById(userId, addressId);
+  const address = await addressRepository.findById(userId, addressId);
 
   if (!address) {
     throw new AppError(404, "Address not found");
   }
 
-  await addressModel.remove(userId, addressId);
+  await addressRepository.remove(userId, addressId);
 
   return address;
 };
 
 export const setToDefault = async (userId: string, addressId: string) => {
-  const address = await addressModel.findById(userId, addressId);
+  const address = await addressRepository.findById(userId, addressId);
 
   if (!address) {
     throw new AppError(404, "Address not found");
@@ -111,5 +112,5 @@ export const setToDefault = async (userId: string, addressId: string) => {
     throw new AppError(400, "Address already set to default");
   }
 
-  return await addressModel.setDefault(userId, addressId);
+  return await addressRepository.setDefault(userId, addressId);
 };

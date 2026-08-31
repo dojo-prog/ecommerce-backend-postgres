@@ -1,12 +1,13 @@
-import * as cartModel from "../models/cart.model";
 import { Cart } from "../schemas/cart";
 
+import * as cartRepository from "../repositories/cart.repository";
+
 export const getOrCreateCart = async (userId: string): Promise<Cart> => {
-  const exisiting = await cartModel.findByUserId(userId);
+  const exisiting = await cartRepository.findByUserId(userId);
 
   if (exisiting) {
     return exisiting;
   }
 
-  return await cartModel.add(userId);
+  return await cartRepository.add(userId);
 };

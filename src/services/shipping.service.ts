@@ -1,5 +1,3 @@
-import geocodeAddress from "../integrations/nominatim/geocoding";
-import * as shippingModel from "../models/shipping.model";
 import {
   CreateShippingPayload,
   Shipping,
@@ -10,26 +8,28 @@ import {
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
 
+import * as shippingRepository from "../repositories/shipping.repository";
+
 export const getShippingDetails = async () => {
-  return await shippingModel.find();
+  return await shippingRepository.find();
 };
 
 export const createShipping = async (
   payload: CreateShippingPayload,
 ): Promise<Shipping> => {
-  const existing = await shippingModel.find();
+  const existing = await shippingRepository.find();
 
   if (existing) {
     throw new AppError(400, "A shipping policy/rate has already been created");
   }
 
-  return await shippingModel.create(payload);
+  return await shippingRepository.create(payload);
 };
 
 export const updateShipping = async (
   payload: UpdateShippingPayload,
 ): Promise<UpdateShippingResult> => {
-  const shipping = await shippingModel.find();
+  const shipping = await shippingRepository.find();
 
   if (!shipping) {
     throw new AppError(400, "No shipping policy/rate has yet to be created");
@@ -37,7 +37,7 @@ export const updateShipping = async (
 
   const { old_values, new_values } = generateChanges(shipping, payload);
 
-  const updated = await shippingModel.update(shipping.id, new_values);
+  const updated = await shippingRepository.update(shipping.id, new_values);
 
   return {
     shipping: updated,
@@ -47,13 +47,13 @@ export const updateShipping = async (
 };
 
 export const deleteShipping = async (): Promise<Shipping> => {
-  const shipping = await shippingModel.find();
+  const shipping = await shippingRepository.find();
 
   if (!shipping) {
     throw new AppError(400, "No shipping policy/rate has yet to be created");
   }
 
-  await shippingModel.remove(shipping.id);
+  await shippingRepository.remove(shipping.id);
 
   return shipping;
 };

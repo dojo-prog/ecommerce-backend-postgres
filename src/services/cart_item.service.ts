@@ -1,6 +1,3 @@
-import * as cartItemModel from "../models/cart_item.model";
-import * as productModel from "../models/product.model";
-import * as cartService from "../services/cart.service";
 import {
   AddToCartPayload,
   CartItemQueryPayload,
@@ -9,6 +6,10 @@ import {
   UpdateCartItemPayload,
 } from "../schemas/cart_items";
 import AppError from "../utils/AppError";
+
+import * as cartItemRepository from "../repositories/cart_item.repository";
+import * as productRepository from "../repositories/product.repository.js";
+import * as cartService from "../services/cart.service";
 
 // =======================================
 // HELPER
@@ -31,7 +32,7 @@ export const getCartItems = async (
   userId: string,
   filters: CartItemQueryPayload,
 ): Promise<CartItemQueryResult> => {
-  const { cart_items, total } = await cartItemModel.find(userId, filters);
+  const { cart_items, total } = await cartItemRepository.find(userId, filters);
 
   const { page, limit } = filters;
 
@@ -52,7 +53,7 @@ export const addToCart = async (
 ): Promise<CartItemRelations> => {
   const { product_id } = payload;
 
-  const product = await productModel.findById(product_id);
+  const product = await productRepository.findById(product_id);
 
   if (!product) {
     throw new AppError(400, "Product not found");
@@ -66,25 +67,25 @@ export const addToCart = async (
 
   const cart = await cartService.getOrCreateCart(userId);
 
-  const existing = await cartItemModel.findById(userId, product_id);
+  const existing = await cartItemRepository.findById(userId, product_id);
 
   if (existing) {
     const newQuantity = existing.quantity + payload.quantity;
 
     checkQuantity(stock_quantity, newQuantity);
 
-    return await cartItemModel.update(userId, product_id, {
+    return await cartItemRepository.update(userId, product_id, {
       quantity: newQuantity,
     });
   }
 
   checkQuantity(product.stock_quantity, payload.quantity);
 
-  return await cartItemModel.add(userId, { ...payload, cart_id: cart.id });
+  return await cartItemRepository.add(userId, { ...payload, cart_id: cart.id });
 };
 
 export const getCartItemById = async (userId: string, productId: string) => {
-  const cartItem = await cartItemModel.findById(userId, productId);
+  const cartItem = await cartItemRepository.findById(userId, productId);
 
   if (!cartItem) {
     throw new AppError(404, "Cart item not found");
@@ -98,13 +99,13 @@ export const updateItemQuantity = async (
   productId: string,
   payload: UpdateCartItemPayload,
 ): Promise<CartItemRelations | void> => {
-  const product = await productModel.findById(productId);
+  const product = await productRepository.findById(productId);
 
   if (!product) {
     throw new AppError(400, "Product not found");
   }
 
-  const cartItem = await cartItemModel.findById(userId, productId);
+  const cartItem = await cartItemRepository.findById(userId, productId);
 
   if (!cartItem) {
     throw new AppError(404, "Cart item not found");
@@ -117,23 +118,23 @@ export const updateItemQuantity = async (
   }
 
   if (quantity === 0) {
-    return await cartItemModel.remove(userId, productId);
+    return await cartItemRepository.remove(userId, productId);
   }
 
   checkQuantity(product.stock_quantity, quantity);
 
-  return await cartItemModel.update(userId, productId, { quantity });
+  return await cartItemRepository.update(userId, productId, { quantity });
 };
 
 export const removeFromCart = async (
   userId: string,
   productId: string,
 ): Promise<void> => {
-  const cartItem = await cartItemModel.findById(userId, productId);
+  const cartItem = await cartItemRepository.findById(userId, productId);
 
   if (!cartItem) {
     throw new AppError(404, "Cart item not found");
   }
 
-  await cartItemModel.remove(userId, productId);
+  await cartItemRepository.remove(userId, productId);
 };

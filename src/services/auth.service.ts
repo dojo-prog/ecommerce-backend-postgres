@@ -6,7 +6,6 @@ import {
   RegisterPayload,
   RegisterServiceResult,
 } from "../schemas/auth";
-import * as authModel from "../models/auth.model";
 import AppError from "../utils/AppError";
 import bcrypt from "bcryptjs";
 import {
@@ -16,18 +15,20 @@ import {
 import ENV from "../config/env";
 import { getOrCreateCart } from "../services/cart.service";
 
+import * as authRepository from "../repositories/auth.repository";
+
 export const register = async (
   payload: RegisterPayload,
 ): Promise<RegisterServiceResult> => {
   const { username, email, password } = payload;
 
-  const existingUsername = await authModel.findByUsername(username);
+  const existingUsername = await authRepository.findByUsername(username);
 
   if (existingUsername) {
     throw new AppError(400, "Username already used");
   }
 
-  const existingEmail = await authModel.findByEmail(email);
+  const existingEmail = await authRepository.findByEmail(email);
 
   if (existingEmail) {
     throw new AppError(400, "Email already registered");
@@ -42,7 +43,7 @@ export const register = async (
     password_hash,
   };
 
-  const user = await authModel.register(finalPayload);
+  const user = await authRepository.register(finalPayload);
 
   await getOrCreateCart(user.id);
 
@@ -58,7 +59,7 @@ export const login = async (
 ): Promise<LoginServiceResult> => {
   const { email, password } = payload;
 
-  const user = await authModel.findPrivateByEmail(email);
+  const user = await authRepository.findPrivateByEmail(email);
 
   if (!user) {
     throw new AppError(400, "Invalid email or password");
@@ -101,7 +102,7 @@ export const refreshAccessToken = async (
     throw new AppError(401, "Unauthorized");
   }
 
-  const user = await authModel.findById(decoded.id);
+  const user = await authRepository.findById(decoded.id);
 
   if (!user) {
     throw new AppError(401, "Unauthorized");

@@ -1,8 +1,9 @@
 import { ProductRelations } from "../schemas/products";
-import * as inventoryModel from "../models/inventory.model";
-import { findById as findProductById } from "../models/product.model";
+import { findById as findProductById } from "../repositories/product.repository";
 import AppError from "../utils/AppError";
 import { Inventory } from "../schemas/inventory";
+
+import * as inventoryRepository from "../repositories/inventory.repository";
 
 // =======================================
 // EXPOSED SERVICE
@@ -18,13 +19,13 @@ export const addInventoryStock = async (
     throw new AppError(404, "Product not found");
   }
 
-  let inventory = await inventoryModel.findById(productId);
+  let inventory = await inventoryRepository.findById(productId);
 
   if (!inventory) {
-    inventory = await inventoryModel.add(productId, 0);
+    inventory = await inventoryRepository.add(productId, 0);
   }
 
-  await inventoryModel.update(productId, {
+  await inventoryRepository.update(productId, {
     quantity: inventory.quantity + quantity,
   });
 
@@ -41,17 +42,17 @@ export const updateProductInventory = async (
     throw new AppError(404, "Product not found");
   }
 
-  let inventory = await inventoryModel.findById(productId);
+  let inventory = await inventoryRepository.findById(productId);
 
   if (!inventory) {
-    inventory = await inventoryModel.add(productId, 0);
+    inventory = await inventoryRepository.add(productId, 0);
   }
 
   if (inventory.quantity === newQuantity) {
     throw new AppError(400, `Inventory already contains ${newQuantity} units`);
   }
 
-  await inventoryModel.update(productId, {
+  await inventoryRepository.update(productId, {
     quantity: newQuantity,
   });
 
@@ -61,7 +62,7 @@ export const updateProductInventory = async (
 export const getInventoryById = async (
   productId: string,
 ): Promise<Inventory> => {
-  const inventory = await inventoryModel.findById(productId);
+  const inventory = await inventoryRepository.findById(productId);
 
   if (!inventory) {
     throw new AppError(404, "Inventory not found");
@@ -78,5 +79,5 @@ export const createInventory = async (
   productId: string,
   initQty: number = 0,
 ): Promise<void> => {
-  await inventoryModel.add(productId, initQty);
+  await inventoryRepository.add(productId, initQty);
 };

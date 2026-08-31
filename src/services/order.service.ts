@@ -6,20 +6,20 @@ import { calculateDistanceMeters } from "../utils/calculateDistanceMeters";
 
 import * as orderItemService from "../services/order_item.service";
 
-import * as orderModel from "../models/order.model";
-import * as cartModel from "../models/cart.model";
-import * as cartItemModel from "../models/cart_item.model";
-import * as inventoryModel from "../models/inventory.model";
-import * as addressModel from "../models/address.model";
-import * as storeModel from "../models/store.model";
-import * as shippingModel from "../models/shipping.model";
-import * as orderItemModel from "../models/order_item.model";
+import * as orderRepository from "../repositories/order.repository";
+import * as cartRepository from "../repositories/cart.repository";
+import * as cartItemRepository from "../repositories/cart_item.repository";
+import * as inventoryRepository from "../repositories/inventory.repository";
+import * as addressRepository from "../repositories/address.repository";
+import * as storeRepository from "../repositories/store.repository";
+import * as shippingRepository from "../repositories/shipping.repository";
+import * as orderItemRepository from "../repositories/order_item.repository";
 
 export const getUserOrders = async (
   userId: string,
   filters: OrderQueryPayload,
 ): Promise<OrderWithItems[]> => {
-  const orders = await orderModel.find(userId, filters);
+  const orders = await orderRepository.find(userId, filters);
 
   if (orders.length === 0) {
     return [];
@@ -52,7 +52,7 @@ export const getUserOrderById = async (
   userId: string,
   orderId: string,
 ): Promise<OrderWithItems> => {
-  const order = await orderModel.findById(userId, orderId);
+  const order = await orderRepository.findById(userId, orderId);
 
   if (!order) {
     throw new AppError(404, "Order not found");
@@ -81,7 +81,7 @@ export const checkout = async (
     // GET USER CART
     // =======================================
 
-    const cart = await cartModel.findById(userId, client);
+    const cart = await cartRepository.findById(userId, client);
 
     if (!cart) {
       throw new AppError(404, "Cart not found");
@@ -91,7 +91,7 @@ export const checkout = async (
     // GET CURRENT CART ITEMS
     // =======================================
 
-    const cartItems = await cartItemModel.findByCartId(cart.id, client);
+    const cartItems = await cartItemRepository.findByCartId(cart.id, client);
 
     if (cartItems.length === 0) {
       throw new AppError(400, "Cannot checkout with an empty cart");
@@ -106,7 +106,7 @@ export const checkout = async (
     for (const ci of cartItems) {
       const { product, quantity } = ci;
 
-      const inventory = await inventoryModel.decrement(
+      const inventory = await inventoryRepository.decrement(
         client,
         product.id,
         quantity,
@@ -123,7 +123,7 @@ export const checkout = async (
     // GET USER PROVIDED ADDRESS
     // =======================================
 
-    const address = await addressModel.findById(userId, addressId);
+    const address = await addressRepository.findById(userId, addressId);
 
     if (!address) {
       throw new AppError(404, "Shipping address not found");
@@ -135,7 +135,7 @@ export const checkout = async (
     // GET STORE ADDRESS
     // =======================================
 
-    const storeAddress = await storeModel.find(client);
+    const storeAddress = await storeRepository.find(client);
 
     if (!storeAddress) {
       throw new AppError(400, "No store is currently registered");
@@ -159,7 +159,7 @@ export const checkout = async (
     // GET SHIPPING METHOD
     // =======================================
 
-    const shippingMethod = await shippingModel.find(client);
+    const shippingMethod = await shippingRepository.find(client);
 
     if (!shippingMethod) {
       throw new AppError(400, "No shipping method is registered currently");
@@ -182,7 +182,7 @@ export const checkout = async (
     // CREATE / INSERT ORDER
     // =======================================
 
-    const order = await orderModel.create(client, {
+    const order = await orderRepository.create(client, {
       user_id: userId,
       subtotal_cents: subtotalCents,
       tax_cents: taxCents,
@@ -200,7 +200,7 @@ export const checkout = async (
     for (const ci of cartItems) {
       const { product, quantity } = ci;
 
-      const item = await orderItemModel.add(client, {
+      const item = await orderItemRepository.add(client, {
         order_id: order.id,
         product_id: product.id,
         product_name: product.name,
@@ -217,7 +217,7 @@ export const checkout = async (
     // CLEAR USER CART
     // =======================================
 
-    await cartItemModel.removeAllByCartId(client, cart.id);
+    await cartItemRepository.removeAllByCartId(client, cart.id);
 
     await client.query("COMMIT");
 
@@ -242,7 +242,7 @@ export const cancelOrder = async (
   try {
     await client.query("BEGIN");
 
-    const order = await orderModel.findById(userId, orderId, client);
+    const order = await orderRepository.findById(userId, orderId, client);
 
     if (!order) {
       throw new AppError(404, "Order not found");
@@ -256,19 +256,23 @@ export const cancelOrder = async (
     // INCREMENT BACK TO INVENTORY
     // =======================================
 
-    const items = await orderItemModel.findByOrderId(orderId, client);
+    const items = await orderItemRepository.findByOrderId(orderId, client);
 
     for (const item of items) {
       if (item.product_id === null) continue;
 
-      await inventoryModel.increment(client, item.product_id, item.quantity);
+      await inventoryRepository.increment(
+        client,
+        item.product_id,
+        item.quantity,
+      );
     }
 
     // =======================================
     // TAG ORDER AS CANCELLED
     // =======================================
 
-    const cancelledOrder = await orderModel.cancel(orderId, client);
+    const cancelledOrder = await orderRepository.cancel(orderId, client);
 
     await client.query("COMMIT");
 
