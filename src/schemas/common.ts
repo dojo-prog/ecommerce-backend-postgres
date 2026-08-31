@@ -31,8 +31,8 @@ export const SortOrderSchema = z.enum(["desc", "asc"], {
 });
 
 export const PaginationQuerySchema = z.object({
-  page: NonNegativeIntSchema.default(1),
-  limit: NonNegativeIntSchema.default(10),
+  page: NonNegativeIntSchema.optional().default(1),
+  limit: NonNegativeIntSchema.optional().default(10),
 });
 
 export const SearchQuerySchema = z

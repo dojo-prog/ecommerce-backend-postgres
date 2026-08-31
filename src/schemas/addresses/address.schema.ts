@@ -3,9 +3,8 @@ import {
   IsoDatetimeSchema,
   LatitudeSchema,
   LongitudeSchema,
-  UpdateResultSchema,
   UUIDSchema,
-} from "./common";
+} from "../common";
 
 // =======================================
 // REUSABLE FIELDS
@@ -43,7 +42,7 @@ export const AddressLineSchema = z
 export const IsDefaultSchema = z.boolean().default(false);
 
 // =======================================
-// DATABASE ENTITY SCHEMA
+// ENTITY
 // =======================================
 
 export const AddressEntitySchema = z.object({
@@ -62,44 +61,7 @@ export const AddressEntitySchema = z.object({
 });
 
 // =======================================
-// REQ PARAMS SCHEMA
-// =======================================
-
-export const AddressParamsSchema = z.object({
-  addressId: UUIDSchema,
-});
-
-// =======================================
-// REQ BODY SCHEMA
-// =======================================
-
-export const AddressBaseInputSchema = z.object({
-  region: RegionSchema,
-  province: ProvinceSchema,
-  city: CitySchema,
-  barangay: BarangaySchema,
-  address_line: AddressLineSchema,
-});
-
-export const CreateAddressInputSchema = AddressBaseInputSchema;
-export const UpdateAddressInputSchema = AddressBaseInputSchema;
-
-// =======================================
-// RESULTS SCHEMA
-// =======================================
-
-export const UpdateAddressResultSchema = z.object({
-  address: AddressEntitySchema,
-  ...UpdateResultSchema.shape,
-});
-
-// =======================================
 // TYPES
 // =======================================
 
 export type UserAddress = z.infer<typeof AddressEntitySchema>;
-
-export type CreateAddressPayload = z.infer<typeof CreateAddressInputSchema>;
-export type UpdateAddressPayload = z.infer<typeof UpdateAddressInputSchema>;
-
-export type UpdateAddressResult = z.infer<typeof UpdateAddressResultSchema>;

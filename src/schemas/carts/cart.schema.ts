@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { IsoDatetimeSchema, UUIDSchema } from "./common";
+import { IsoDatetimeSchema, UUIDSchema } from "../common";
 
 // =======================================
-// DATABASE ENTITY SCHEMA
+// ENTITY
 // =======================================
 
 export const CartEntitySchema = z.object({

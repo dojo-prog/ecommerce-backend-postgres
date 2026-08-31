@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IsoDatetimeSchema, NonNegativeIntSchema, UUIDSchema } from "./common";
+import { IsoDatetimeSchema, NonNegativeIntSchema, UUIDSchema } from "../common";
 
 // =======================================
 // REUSABLE FIELDS SCHEMA
@@ -12,7 +12,7 @@ export const TransactionIdSchema = z
   .max(100, { message: "Transaction ID cannot exceed 100 characters" });
 
 // =======================================
-// ENUM SCHEMA
+// ENUM
 // =======================================
 
 export const PaymentStatusSchema = z.enum(
@@ -25,7 +25,7 @@ export const PaymentProviderSchema = z.enum(["mock"], {
 });
 
 // =======================================
-// DATABASE ENTITY SCHEMA
+// ENTITY
 // =======================================
 
 const PaymentEntitySchema = z.object({
@@ -39,29 +39,11 @@ const PaymentEntitySchema = z.object({
 });
 
 // =======================================
-// REQ PARAMS SCHEMA
-// =======================================
-
-export const PaymentParamsSchema = z.object({
-  paymentId: UUIDSchema,
-});
-
-// =======================================
-// PAYLOAD SCHEMA
-// =======================================
-
-export const CreatePaymentPayloadSchema = z.object({
-  order_id: UUIDSchema,
-  amount_cents: NonNegativeIntSchema,
-  status: PaymentStatusSchema,
-  provider: PaymentProviderSchema,
-  transaction_id: TransactionIdSchema,
-});
-
-// =======================================
 // TYPES
 // =======================================
 
-export type Payment = z.infer<typeof PaymentEntitySchema>;
+export type PaymentStatus = z.infer<typeof PaymentStatusSchema>;
 
-export type CreatePaymentPayload = z.infer<typeof CreatePaymentPayloadSchema>;
+export type PaymentProvider = z.infer<typeof PaymentProviderSchema>;
+
+export type Payment = z.infer<typeof PaymentEntitySchema>;

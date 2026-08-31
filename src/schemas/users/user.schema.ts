@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IsoDatetimeSchema, UUIDSchema } from "./common";
+import { IsoDatetimeSchema, UUIDSchema } from "../common";
 
 // =======================================
 // REUSABLE FIELDS
@@ -24,7 +24,7 @@ export const PasswordHashSchema = z
   );
 
 // =======================================
-// ENUM SCHEMA
+// ENUM
 // =======================================
 
 export const UserRoleSchema = z.enum(["customer", "admin"], {
@@ -32,7 +32,7 @@ export const UserRoleSchema = z.enum(["customer", "admin"], {
 });
 
 // =======================================
-// DATABASE ENTITY SCHEMA
+// ENTITY
 // =======================================
 
 export const UserPrivateSchema = z.object({
@@ -54,4 +54,5 @@ export const UserPublicSchema = UserPrivateSchema.omit({ password_hash: true });
 export type UserRole = z.infer<typeof UserRoleSchema>;
 
 export type UserPrivate = z.infer<typeof UserPrivateSchema>;
+
 export type UserPublic = z.infer<typeof UserPublicSchema>;
