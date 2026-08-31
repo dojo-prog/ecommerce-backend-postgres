@@ -5,17 +5,17 @@ import {
   CART_ITEM_RELATIONS_PROJECTION,
 } from "../database/queries/cart_items";
 import {
-  AddToCartPayload,
-  CartItemQueryPayload,
-  CartItemRelations,
+  AddToCartBody,
+  CartItemQuery,
+  CartItemWithRelations,
 } from "../schemas/cart_items";
 import buildFilterQueries from "../utils/query-builder/buildFilterQueries";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 
 export const find = async (
   userId: string,
-  filters: CartItemQueryPayload,
-): Promise<{ cart_items: CartItemRelations[]; total: number }> => {
+  filters: CartItemQuery,
+): Promise<{ cart_items: CartItemWithRelations[]; total: number }> => {
   const { whereClause, limitClause, offsetClause, values } = buildFilterQueries(
     filters,
     ["cart.user_id = $1"],
@@ -48,7 +48,7 @@ export const find = async (
 export const findByCartId = async (
   cartId: string,
   client?: PoolClient,
-): Promise<CartItemRelations[]> => {
+): Promise<CartItemWithRelations[]> => {
   const conn = client ? client : pool;
 
   const { rows } = await conn.query(
@@ -67,7 +67,7 @@ export const findByCartId = async (
 export const findById = async (
   userId: string,
   productId: string,
-): Promise<CartItemRelations> => {
+): Promise<CartItemWithRelations> => {
   const { rows } = await pool.query(
     `
     SELECT ${CART_ITEM_RELATIONS_PROJECTION}
@@ -84,8 +84,8 @@ export const findById = async (
 
 export const add = async (
   userId: string,
-  payload: AddToCartPayload & { cart_id: string },
-): Promise<CartItemRelations> => {
+  payload: AddToCartBody & { cart_id: string },
+): Promise<CartItemWithRelations> => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
   await pool.query(
@@ -103,7 +103,7 @@ export const update = async (
   userId: string,
   productId: string,
   changes: { quantity: number },
-): Promise<CartItemRelations> => {
+): Promise<CartItemWithRelations> => {
   await pool.query(
     `
     UPDATE cart_items ci

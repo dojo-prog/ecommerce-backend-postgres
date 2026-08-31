@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 import pool from "../database/db";
-import { Cart } from "../schemas/cart";
+import { Cart } from "../schemas/carts";
 
 export const findById = async (
   userId: string,

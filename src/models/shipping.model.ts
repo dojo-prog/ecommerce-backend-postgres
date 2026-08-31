@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 import pool from "../database/db";
-import { CreateShippingPayload, Shipping } from "../schemas/shipping";
+import { CreateShippingBody, Shipping } from "../schemas/shippings";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
@@ -17,7 +17,7 @@ export const find = async (client?: PoolClient): Promise<Shipping> => {
 };
 
 export const create = async (
-  payload: CreateShippingPayload,
+  payload: CreateShippingBody,
 ): Promise<Shipping> => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 

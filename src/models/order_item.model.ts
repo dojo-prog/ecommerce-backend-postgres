@@ -1,7 +1,8 @@
 import { PoolClient } from "pg";
 import pool from "../database/db";
-import { CreateOrderItemPayload, OrderItem } from "../schemas/order_items";
+import { OrderItem } from "../schemas/order_items";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
+import { CreateOrderItemData } from "../types/entities/order_item.types";
 
 export const findByOrderIds = async (
   orderIds: string[],
@@ -36,7 +37,7 @@ export const findByOrderId = async (
 
 export const add = async (
   client: PoolClient,
-  payload: CreateOrderItemPayload,
+  payload: CreateOrderItemData,
 ): Promise<OrderItem> => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 

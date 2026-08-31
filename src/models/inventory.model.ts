@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 import pool from "../database/db";
-import { Inventory, UpdateInventoryPayload } from "../schemas/inventory";
+import { Inventory, UpdateInventoryBody } from "../schemas/inventories";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
@@ -39,7 +39,7 @@ export const add = async (
 
 export const update = async (
   productId: string,
-  changes: UpdateInventoryPayload,
+  changes: UpdateInventoryBody,
 ): Promise<void> => {
   const { setClause, values } = buildUpdateQueries(changes);
 

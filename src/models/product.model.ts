@@ -4,21 +4,20 @@ import {
   PRODUCT_RELATIONS_PROJECTION,
 } from "../database/queries/products";
 import {
-  CreateProductFinalPayload,
-  CreateProductPayload,
   Product,
   ProductAllowableSort,
-  ProductQueryPayload,
-  ProductRelations,
+  ProductQuery,
+  ProductWithRelations,
 } from "../schemas/products";
+import { CreateProductData } from "../types/entities/product.types";
 import buildFilterQueries from "../utils/query-builder/buildFilterQueries";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildProductSpecificFilters from "../utils/query-builder/buildProductSpecificFilters";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
 export const find = async (
-  filters: ProductQueryPayload,
-): Promise<{ products: ProductRelations[]; total: number }> => {
+  filters: ProductQuery,
+): Promise<{ products: ProductWithRelations[]; total: number }> => {
   const { category, minPrice, maxPrice, inStock, ...generic } = filters;
   const specific = { category, minPrice, maxPrice, inStock };
 
@@ -58,7 +57,7 @@ export const find = async (
 
 export const findById = async (
   productId: string,
-): Promise<ProductRelations> => {
+): Promise<ProductWithRelations> => {
   const { rows } = await pool.query(
     `
     SELECT ${PRODUCT_RELATIONS_PROJECTION}
@@ -72,7 +71,9 @@ export const findById = async (
   return rows[0];
 };
 
-export const findByName = async (name: string): Promise<ProductRelations> => {
+export const findByName = async (
+  name: string,
+): Promise<ProductWithRelations> => {
   const { rows } = await pool.query(
     `
     SELECT ${PRODUCT_RELATIONS_PROJECTION}
@@ -87,7 +88,7 @@ export const findByName = async (name: string): Promise<ProductRelations> => {
 };
 
 export const add = async (
-  payload: CreateProductFinalPayload,
+  payload: CreateProductData,
 ): Promise<{ id: string }> => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
@@ -106,7 +107,7 @@ export const add = async (
 export const update = async (
   productId: string,
   changes: Partial<Product>,
-): Promise<ProductRelations> => {
+): Promise<ProductWithRelations> => {
   const { setClause, values } = buildUpdateQueries(changes);
 
   values.push(productId);

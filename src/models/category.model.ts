@@ -1,15 +1,15 @@
 import pool from "../database/db";
 import {
   Category,
-  CategoryQueryPayload,
-  CreateCategoryPayload,
+  CategoryQuery,
+  CreateCategoryBody,
 } from "../schemas/categories";
 import buildFilterQueries from "../utils/query-builder/buildFilterQueries";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
 export const find = async (
-  filters: CategoryQueryPayload,
+  filters: CategoryQuery,
 ): Promise<{ categories: Category[]; total: number }> => {
   const { whereClause, orderByClause, limitClause, offsetClause, values } =
     buildFilterQueries(filters, [], [], ["name"]);
@@ -59,9 +59,7 @@ export const findBySlug = async (categorySlug: string): Promise<Category> => {
   return rows[0];
 };
 
-export const add = async (
-  payload: CreateCategoryPayload & { slug: string },
-) => {
+export const add = async (payload: CreateCategoryBody & { slug: string }) => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
   const { rows } = await pool.query(

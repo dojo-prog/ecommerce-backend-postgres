@@ -1,16 +1,13 @@
 import { PoolClient } from "pg";
 import pool from "../database/db";
-import {
-  CreateOrderPayload,
-  Order,
-  OrderQueryPayload,
-} from "../schemas/orders";
+import { Order, OrderQuery } from "../schemas/orders";
 import buildFilterQueries from "../utils/query-builder/buildFilterQueries";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
+import { CreateOrderData } from "../types/entities/order.types";
 
 export const find = async (
   userId: string,
-  filters: OrderQueryPayload,
+  filters: OrderQuery,
 ): Promise<Order[]> => {
   const { whereClause, limitClause, offsetClause, values } = buildFilterQueries(
     filters,
@@ -52,7 +49,7 @@ export const findById = async (
 
 export const create = async (
   client: PoolClient,
-  payload: CreateOrderPayload,
+  payload: CreateOrderData,
 ): Promise<Order> => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 

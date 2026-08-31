@@ -1,8 +1,8 @@
 import pool from "../database/db";
 import {
-  CreateSubcategoryPayload,
+  CreateSubcategoryBody,
   Subcategory,
-  SubcategoryQueryPayload,
+  SubcategoryQuery,
 } from "../schemas/subcategories";
 import buildFilterQueries from "../utils/query-builder/buildFilterQueries";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
@@ -10,7 +10,7 @@ import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
 export const find = async (
   categoryId: string,
-  filters: SubcategoryQueryPayload,
+  filters: SubcategoryQuery,
 ): Promise<{ subcategories: Subcategory[]; total: number }> => {
   const { whereClause, orderByClause, offsetClause, limitClause, values } =
     buildFilterQueries(filters, ["category_id = $1"], [categoryId], ["name"]);
@@ -88,7 +88,7 @@ export const findBySlug = async (
 };
 
 export const add = async (
-  payload: CreateSubcategoryPayload & { category_id: string; slug: string },
+  payload: CreateSubcategoryBody & { category_id: string; slug: string },
 ): Promise<Subcategory> => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 

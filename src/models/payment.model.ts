@@ -1,5 +1,5 @@
 import pool from "../database/db";
-import { CreatePaymentPayload } from "../schemas/payments";
+import { CreatePaymentData } from "../types/entities/payment.types";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 
 export const findById = async (paymentId: string) => {
@@ -38,7 +38,7 @@ export const findByTransactionId = async (transactionId: string) => {
   return rows[0];
 };
 
-export const create = async (payload: CreatePaymentPayload) => {
+export const create = async (payload: CreatePaymentData) => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
   const { rows } = await pool.query(

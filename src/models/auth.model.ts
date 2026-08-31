@@ -3,7 +3,7 @@ import {
   USER_PUBLIC_PROJECTION,
 } from "../database/queries/users";
 import pool from "../database/db";
-import { RegisterPayload } from "../schemas/auth";
+import { RegisterBody } from "../schemas/auth";
 import { UserPrivate, UserPublic } from "../schemas/users";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 
@@ -62,7 +62,7 @@ export const findPrivateByEmail = async (
 };
 
 export const register = async (
-  payload: Partial<RegisterPayload> & { password_hash: string },
+  payload: Partial<RegisterBody> & { password_hash: string },
 ): Promise<UserPublic> => {
   const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
 
