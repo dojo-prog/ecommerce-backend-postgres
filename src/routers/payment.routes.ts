@@ -1,8 +1,8 @@
 import express from "express";
 import { protectRoute } from "../middlewares/auth.middleware";
 import validate from "../middlewares/validation.middleware";
-import { OrderParamsSchema } from "../schemas/orders";
-import { PaymentParamsSchema } from "../schemas/payments";
+import { OrderIdParamsSchema } from "../schemas/orders";
+import { PaymentIdParamsSchema } from "../schemas/payments";
 import {
   getPaymentById,
   getPaymentByOrderId,
@@ -21,15 +21,15 @@ router
   .route("/orders/:orderId/payments")
   .get(
     readLimiter,
-    validate({ params: OrderParamsSchema }),
+    validate({ params: OrderIdParamsSchema }),
     getPaymentByOrderId,
   )
-  .post(writeLimiter, validate({ params: OrderParamsSchema }), payOrder);
+  .post(writeLimiter, validate({ params: OrderIdParamsSchema }), payOrder);
 
 router.get(
   "/payments/:paymentId",
   readLimiter,
-  validate({ params: PaymentParamsSchema }),
+  validate({ params: PaymentIdParamsSchema }),
   getPaymentById,
 );
 

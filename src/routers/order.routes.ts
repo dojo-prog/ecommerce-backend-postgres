@@ -2,8 +2,8 @@ import express from "express";
 import { protectRoute } from "../middlewares/auth.middleware";
 import validate from "../middlewares/validation.middleware";
 import {
-  CheckoutPayloadSchema,
-  OrderParamsSchema,
+  CheckoutBodySchema,
+  OrderIdParamsSchema,
   OrderQuerySchema,
 } from "../schemas/orders";
 import {
@@ -30,14 +30,14 @@ router.get(
 router.post(
   "/checkout",
   writeLimiter,
-  validate({ body: CheckoutPayloadSchema }),
+  validate({ body: CheckoutBodySchema }),
   checkout,
 );
 
 router.get(
   "/:orderId",
   readLimiter,
-  validate({ params: OrderParamsSchema }),
+  validate({ params: OrderIdParamsSchema }),
   getUserOrderById,
 );
 

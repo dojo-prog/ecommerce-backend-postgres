@@ -4,8 +4,8 @@ import {
   CategoryIdParamsSchema,
   CategoryQuerySchema,
   CategorySlugParamsSchema,
-  CreateCategoryInputSchema,
-  UpdateCategoryInputSchema,
+  CreateCategoryBodySchema,
+  UpdateCategoryBodySchema,
 } from "../schemas/categories";
 import { authorizeRoles, protectRoute } from "../middlewares/auth.middleware";
 import {
@@ -29,7 +29,7 @@ router
     writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
-    validate({ body: CreateCategoryInputSchema }),
+    validate({ body: CreateCategoryBodySchema }),
     createCategory,
   );
 
@@ -48,7 +48,7 @@ router
     authorizeRoles(["admin"]),
     validate({
       params: CategoryIdParamsSchema,
-      body: UpdateCategoryInputSchema,
+      body: UpdateCategoryBodySchema,
     }),
     updateCategory,
   )

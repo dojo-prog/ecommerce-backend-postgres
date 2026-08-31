@@ -1,10 +1,10 @@
 import express from "express";
 import validate from "../middlewares/validation.middleware";
 import {
-  CreateProductInputSchema,
-  ProductParamsSchema,
+  CreateProductBodySchema,
+  ProductIdParamsSchema,
   ProductQuerySchema,
-  UpdateProductInputSchema,
+  UpdateProductBodySchema,
 } from "../schemas/products";
 import multerUpload from "../middlewares/multer.middleware";
 import { authorizeRoles, protectRoute } from "../middlewares/auth.middleware";
@@ -30,26 +30,26 @@ router
     protectRoute,
     authorizeRoles(["admin"]),
     multerUpload.single("thumbnail"),
-    validate({ body: CreateProductInputSchema }),
+    validate({ body: CreateProductBodySchema }),
     createProduct,
   );
 
 router
   .route("/:productId")
-  .get(readLimiter, validate({ params: ProductParamsSchema }), getProductById)
+  .get(readLimiter, validate({ params: ProductIdParamsSchema }), getProductById)
   .patch(
     writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
     multerUpload.single("thumbnail"),
-    validate({ params: ProductParamsSchema, body: UpdateProductInputSchema }),
+    validate({ params: ProductIdParamsSchema, body: UpdateProductBodySchema }),
     updateProduct,
   )
   .delete(
     writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
-    validate({ params: ProductParamsSchema }),
+    validate({ params: ProductIdParamsSchema }),
     deleteProduct,
   );
 

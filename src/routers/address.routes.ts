@@ -3,8 +3,8 @@ import { protectRoute } from "../middlewares/auth.middleware";
 import validate from "../middlewares/validation.middleware";
 import {
   AddressParamsSchema,
-  CreateAddressInputSchema,
-  UpdateAddressInputSchema,
+  CreateAddressBodySchema,
+  UpdateAddressBodySchema,
 } from "../schemas/addresses";
 import {
   createAddress,
@@ -28,7 +28,7 @@ router
   .get(readLimiter, getUserAddresses)
   .post(
     writeLimiter,
-    validate({ body: CreateAddressInputSchema }),
+    validate({ body: CreateAddressBodySchema }),
     createAddress,
   );
 
@@ -37,7 +37,7 @@ router
   .get(readLimiter, validate({ params: AddressParamsSchema }), getAddressById)
   .patch(
     writeLimiter,
-    validate({ params: AddressParamsSchema, body: UpdateAddressInputSchema }),
+    validate({ params: AddressParamsSchema, body: UpdateAddressBodySchema }),
     updateAddress,
   )
   .delete(

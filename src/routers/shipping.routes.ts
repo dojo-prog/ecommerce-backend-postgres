@@ -1,9 +1,9 @@
 import express from "express";
 import { authorizeRoles, protectRoute } from "../middlewares/auth.middleware";
 import {
-  CreateShippingInputSchema,
-  UpdateShippingInputSchema,
-} from "../schemas/shipping";
+  CreateShippingBodySchema,
+  UpdateShippingBodySchema,
+} from "../schemas/shippings";
 import validate from "../middlewares/validation.middleware";
 import {
   createShipping,
@@ -25,14 +25,14 @@ router
     writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
-    validate({ body: CreateShippingInputSchema }),
+    validate({ body: CreateShippingBodySchema }),
     createShipping,
   )
   .patch(
     writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
-    validate({ body: UpdateShippingInputSchema }),
+    validate({ body: UpdateShippingBodySchema }),
     updateShipping,
   )
   .delete(

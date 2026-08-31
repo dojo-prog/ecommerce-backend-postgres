@@ -1,6 +1,5 @@
 import express from "express";
 import validate from "../middlewares/validation.middleware";
-import { LoginInputSchema, RegisterInputSchema } from "../schemas/auth";
 import {
   getCurrentUser,
   login,
@@ -13,6 +12,7 @@ import {
   authLimiter,
   readLimiter,
 } from "../middlewares/rate.limit.middlewares";
+import { LoginBodySchema, RegisterBodySchema } from "../schemas/auth";
 
 const router = express.Router();
 
@@ -20,10 +20,10 @@ router.get("/me", readLimiter, protectRoute, getCurrentUser);
 router.post(
   "/register",
   authLimiter,
-  validate({ body: RegisterInputSchema }),
+  validate({ body: RegisterBodySchema }),
   register,
 );
-router.post("/login", authLimiter, validate({ body: LoginInputSchema }), login);
+router.post("/login", authLimiter, validate({ body: LoginBodySchema }), login);
 router.post("/logout", logout);
 router.post("/refresh", authLimiter, refreshAccessToken);
 

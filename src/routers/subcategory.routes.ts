@@ -1,11 +1,11 @@
 import express from "express";
 import validate from "../middlewares/validation.middleware";
 import {
-  CreateSubcategoryInputSchema,
+  CreateSubcategoryBodySchema,
   SubcategoryIdParamsSchema,
   SubcategoryQuerySchema,
   SubcategorySlugParamsSchema,
-  UpdateSubcategoryInputSchema,
+  UpdateSubcategoryBodySchema,
 } from "../schemas/subcategories";
 import {
   CategoryIdParamsSchema,
@@ -42,7 +42,7 @@ router.post(
   authorizeRoles(["admin"]),
   validate({
     params: CategoryIdParamsSchema,
-    body: CreateSubcategoryInputSchema,
+    body: CreateSubcategoryBodySchema,
   }),
   createSubcategory,
 );
@@ -64,7 +64,7 @@ router
     authorizeRoles(["admin"]),
     validate({
       params: CategoryIdParamsSchema.merge(SubcategoryIdParamsSchema),
-      body: UpdateSubcategoryInputSchema,
+      body: UpdateSubcategoryBodySchema,
     }),
     updateSubcategory,
   )

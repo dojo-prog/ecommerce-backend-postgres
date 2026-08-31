@@ -1,8 +1,8 @@
 import express from "express";
 import validate from "../middlewares/validation.middleware";
 import {
-  CreateStoreInputSchema,
-  UpdateStoreInputSchema,
+  CreateStoreBodySchema,
+  UpdateStoreBodySchema,
 } from "../schemas/stores";
 import { authorizeRoles, protectRoute } from "../middlewares/auth.middleware";
 import {
@@ -22,14 +22,14 @@ router
     readLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
-    validate({ body: CreateStoreInputSchema }),
+    validate({ body: CreateStoreBodySchema }),
     createStore,
   )
   .patch(
     readLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
-    validate({ body: UpdateStoreInputSchema }),
+    validate({ body: UpdateStoreBodySchema }),
     updateStore,
   )
   .delete(protectRoute, authorizeRoles(["admin"]), deleteStore);

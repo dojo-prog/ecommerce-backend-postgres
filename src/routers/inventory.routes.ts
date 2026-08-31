@@ -1,7 +1,7 @@
 import express from "express";
 import validate from "../middlewares/validation.middleware";
-import { ProductParamsSchema } from "../schemas/products";
-import { UpdateInventoryInputSchema } from "../schemas/inventory";
+import { ProductIdParamsSchema } from "../schemas/products";
+import { UpdateInventoryBodySchema } from "../schemas/inventories";
 import {
   addInventoryStock,
   getInventoryById,
@@ -21,19 +21,25 @@ router
     writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
-    validate({ params: ProductParamsSchema, body: UpdateInventoryInputSchema }),
+    validate({
+      params: ProductIdParamsSchema,
+      body: UpdateInventoryBodySchema,
+    }),
     addInventoryStock,
   )
   .patch(
     writeLimiter,
     protectRoute,
     authorizeRoles(["admin"]),
-    validate({ params: ProductParamsSchema, body: UpdateInventoryInputSchema }),
+    validate({
+      params: ProductIdParamsSchema,
+      body: UpdateInventoryBodySchema,
+    }),
     updateProductInventory,
   )
   .get(
     readLimiter,
-    validate({ params: ProductParamsSchema }),
+    validate({ params: ProductIdParamsSchema }),
     getInventoryById,
   );
 
