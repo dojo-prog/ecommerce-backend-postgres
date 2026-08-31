@@ -5,16 +5,16 @@ import { NonNegativeIntSchema, UUIDSchema } from "../common";
 // BODY
 // =======================================
 
-export const CreateInventoryInputSchema = z.object({
+export const CreateInventoryBodySchema = z.object({
   product_id: UUIDSchema,
   quantity: NonNegativeIntSchema.default(0),
 });
 
-export const AddStockToInventoryInputSchema = z.object({
+export const AddStockToInventoryBodySchema = z.object({
   quantity: NonNegativeIntSchema,
 });
 
-export const UpdateInventoryInputSchema = z.object({
+export const UpdateInventoryBodySchema = z.object({
   quantity: NonNegativeIntSchema,
 });
 
@@ -22,10 +22,10 @@ export const UpdateInventoryInputSchema = z.object({
 // TYPES
 // =======================================
 
-export type CreateInventoryPayload = z.infer<typeof CreateInventoryInputSchema>;
+export type CreateInventoryPayload = z.infer<typeof CreateInventoryBodySchema>;
 
 export type AddStockToInventoryPayload = z.infer<
-  typeof AddStockToInventoryInputSchema
+  typeof AddStockToInventoryBodySchema
 >;
 
-export type UpdateInventoryPayload = z.infer<typeof UpdateInventoryInputSchema>;
+export type UpdateInventoryPayload = z.infer<typeof UpdateInventoryBodySchema>;
