@@ -27,6 +27,10 @@ export const OrderQuerySchema = z.object({
 // BODY
 // =======================================
 
+export const CheckoutBodySchema = z.object({
+  address_id: UUIDSchema,
+});
+
 export const UpdateOrderStatusSchema = z.object({
   status: OrderStatusSchema,
 });
@@ -35,6 +39,8 @@ export const UpdateOrderStatusSchema = z.object({
 // TYPES
 // =======================================
 
-export type OrderQueryPayload = z.infer<typeof OrderQuerySchema>;
+export type OrderQuery = z.infer<typeof OrderQuerySchema>;
+
+export type CheckoutBody = z.infer<typeof CheckoutBodySchema>;
 
 export type UpdateOrderStatusBody = z.infer<typeof UpdateOrderStatusSchema>;

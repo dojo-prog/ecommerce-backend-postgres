@@ -5,10 +5,6 @@ import { GetResult, UpdateResult } from "./common";
 // REPOSITORY DATA
 // =======================================
 
-export interface CheckoutData {
-  address_id: string;
-}
-
 export interface CreateOrderData {
   user_id: string;
   subtotal_cents: number;
