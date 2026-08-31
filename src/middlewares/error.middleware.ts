@@ -14,7 +14,7 @@ const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {
     message = err.message;
     errors = err.errors;
   } else if (!isProduction && err instanceof Error) {
-    message = message;
+    message = err.message;
   }
 
   if (statusCode >= 500) {
