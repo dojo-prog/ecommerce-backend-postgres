@@ -1,8 +1,14 @@
 import AppError from "../utils/AppError";
 import pool from "../database/db";
 import { OrderItem } from "../schemas/order_items";
-import { OrderQuery, OrderWithItems } from "../schemas/orders";
+import { OrderWithItems } from "../schemas/orders";
 import { calculateDistanceMeters } from "../utils/calculateDistanceMeters";
+import {
+  CancelOrderParams,
+  CheckoutParams,
+  GetUserOrderParams,
+  GetUserOrdersParams,
+} from "../types/entities/order.types";
 
 import * as orderItemService from "../services/order_item.service";
 
@@ -16,9 +22,10 @@ import * as shippingRepository from "../repositories/shipping.repository";
 import * as orderItemRepository from "../repositories/order_item.repository";
 
 export const getUserOrders = async (
-  userId: string,
-  filters: OrderQuery,
+  params: GetUserOrdersParams,
 ): Promise<OrderWithItems[]> => {
+  const { userId, filters } = params;
+
   const orders = await orderRepository.find(userId, filters);
 
   if (orders.length === 0) {
@@ -49,9 +56,10 @@ export const getUserOrders = async (
 };
 
 export const getUserOrderById = async (
-  userId: string,
-  orderId: string,
+  params: GetUserOrderParams,
 ): Promise<OrderWithItems> => {
+  const { userId, orderId } = params;
+
   const order = await orderRepository.findById(userId, orderId);
 
   if (!order) {
@@ -69,9 +77,10 @@ export const getUserOrderById = async (
 };
 
 export const checkout = async (
-  userId: string,
-  addressId: string,
+  params: CheckoutParams,
 ): Promise<OrderWithItems> => {
+  const { userId, addressId } = params;
+
   const client = await pool.connect();
 
   try {
@@ -234,9 +243,10 @@ export const checkout = async (
 };
 
 export const cancelOrder = async (
-  userId: string,
-  orderId: string,
+  params: CancelOrderParams,
 ): Promise<OrderWithItems> => {
+  const { userId, orderId } = params;
+
   const client = await pool.connect();
 
   try {

@@ -1,5 +1,29 @@
-import { Order } from "../../schemas/orders";
+import { Order, OrderQuery } from "../../schemas/orders";
 import { GetResult, UpdateResult } from "./common";
+
+// =======================================
+// SERVICE PARAMS
+// =======================================
+
+export interface GetUserOrdersParams {
+  userId: string;
+  filters: OrderQuery;
+}
+
+export interface GetUserOrderParams {
+  userId: string;
+  orderId: string;
+}
+
+export interface CheckoutParams {
+  userId: string;
+  addressId: string;
+}
+
+export interface CancelOrderParams {
+  userId: string;
+  orderId: string;
+}
 
 // =======================================
 // REPOSITORY DATA

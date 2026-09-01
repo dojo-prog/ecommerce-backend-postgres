@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { LoginBody, RegisterBody } from "../schemas/auth";
 import AppError from "../utils/AppError";
 import bcrypt from "bcryptjs";
 import {
@@ -8,18 +7,22 @@ import {
 } from "../utils/auth/generateAuthTokens";
 import ENV from "../config/env";
 import { getOrCreateCart } from "../services/cart.service";
-
-import * as authRepository from "../repositories/auth.repository";
 import {
+  LoginParams,
   LoginResult,
+  RefreshAccessTokenParams,
   RefreshTokenPayload,
+  RegisterData,
+  RegisterParams,
   RegisterResult,
 } from "../types/entities/auth.types";
 
+import * as authRepository from "../repositories/auth.repository";
+
 export const register = async (
-  payload: RegisterBody,
+  params: RegisterParams,
 ): Promise<RegisterResult> => {
-  const { username, email, password } = payload;
+  const { username, email, password } = params;
 
   const existingUsername = await authRepository.findByUsername(username);
 
@@ -36,7 +39,7 @@ export const register = async (
   const salt = await bcrypt.genSalt(10);
   const password_hash = await bcrypt.hash(password, salt);
 
-  const finalPayload = {
+  const finalPayload: RegisterData = {
     username,
     email,
     password_hash,
@@ -53,8 +56,8 @@ export const register = async (
   };
 };
 
-export const login = async (payload: LoginBody): Promise<LoginResult> => {
-  const { email, password } = payload;
+export const login = async (params: LoginParams): Promise<LoginResult> => {
+  const { email, password } = params;
 
   const user = await authRepository.findPrivateByEmail(email);
 
@@ -78,9 +81,11 @@ export const login = async (payload: LoginBody): Promise<LoginResult> => {
 };
 
 export const refreshAccessToken = async (
-  refresh_token: string,
+  params: RefreshAccessTokenParams,
 ): Promise<string> => {
-  if (!refresh_token) {
+  const { refreshToken } = params;
+
+  if (!refreshToken) {
     throw new AppError(401, "Unauthorized - Session Expired");
   }
 
@@ -88,7 +93,7 @@ export const refreshAccessToken = async (
 
   try {
     decoded = jwt.verify(
-      refresh_token,
+      refreshToken,
       ENV.REFRESH_TOKEN_SECRET,
     ) as RefreshTokenPayload;
   } catch (error) {

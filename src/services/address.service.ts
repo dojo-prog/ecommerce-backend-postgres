@@ -1,25 +1,33 @@
-import {
-  CreateAddressBody,
-  UpdateAddressBody,
-  UserAddress,
-} from "../schemas/addresses";
+import { UserAddress } from "../schemas/addresses";
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
 import geocodeAddress from "../integrations/nominatim/geocoding";
+import {
+  CreateAddressData,
+  CreateAddressParams,
+  DeleteAddressParams,
+  GetAddressesParams,
+  GetAddressParams,
+  SetToDefaultParams,
+  UpdateAddressParams,
+  UpdateAddressResult,
+} from "../types/entities/address.types";
 
 import * as addressRepository from "../repositories/address.repository";
-import { UpdateAddressResult } from "../types/entities/address.types";
 
 export const getUserAddresses = async (
-  userId: string,
+  params: GetAddressesParams,
 ): Promise<UserAddress[]> => {
+  const { userId } = params;
+
   return await addressRepository.find(userId);
 };
 
 export const createAddress = async (
-  userId: string,
-  payload: CreateAddressBody,
+  params: CreateAddressParams,
 ): Promise<UserAddress> => {
+  const { userId, payload } = params;
+
   const addresses = await addressRepository.find(userId);
 
   if (addresses.length === 3) {
@@ -29,11 +37,15 @@ export const createAddress = async (
     );
   }
 
-  const { latitude, longitude } = await geocodeAddress(payload);
-
-  const finalPayload = {
-    user_id: userId,
+  const { latitude, longitude } = await geocodeAddress({
     ...payload,
+    address_line: payload.addressLine,
+  });
+
+  const finalPayload: CreateAddressData = {
+    ...payload,
+    user_id: userId,
+    address_line: payload.addressLine,
     latitude,
     longitude,
   };
@@ -42,9 +54,10 @@ export const createAddress = async (
 };
 
 export const getAddressById = async (
-  userId: string,
-  addressId: string,
+  params: GetAddressParams,
 ): Promise<UserAddress> => {
+  const { userId, addressId } = params;
+
   const address = await addressRepository.findById(userId, addressId);
 
   if (!address) {
@@ -55,17 +68,20 @@ export const getAddressById = async (
 };
 
 export const updateAddress = async (
-  userId: string,
-  addressId: string,
-  payload: UpdateAddressBody,
+  params: UpdateAddressParams,
 ): Promise<UpdateAddressResult> => {
+  const { userId, addressId, payload } = params;
+
   const address = await addressRepository.findById(userId, addressId);
 
   if (!address) {
     throw new AppError(404, "Address not found");
   }
 
-  const { old_values, new_values } = generateChanges(address, payload);
+  const { old_values, new_values } = generateChanges(address, {
+    ...payload,
+    address_line: payload.addressLine,
+  });
 
   const modifiedAddress = {
     ...address,
@@ -87,9 +103,10 @@ export const updateAddress = async (
 };
 
 export const deleteAddress = async (
-  userId: string,
-  addressId: string,
+  params: DeleteAddressParams,
 ): Promise<UserAddress> => {
+  const { userId, addressId } = params;
+
   const address = await addressRepository.findById(userId, addressId);
 
   if (!address) {
@@ -101,7 +118,9 @@ export const deleteAddress = async (
   return address;
 };
 
-export const setToDefault = async (userId: string, addressId: string) => {
+export const setToDefault = async (params: SetToDefaultParams) => {
+  const { userId, addressId } = params;
+
   const address = await addressRepository.findById(userId, addressId);
 
   if (!address) {

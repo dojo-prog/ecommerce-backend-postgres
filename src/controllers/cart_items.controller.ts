@@ -8,10 +8,10 @@ import {
 
 export const getCartItems: Controller = async (req, res, next) => {
   try {
-    const data = await cartItemService.getCartItems(
-      req.user!.id,
-      CartItemQuerySchema.parse(req.query),
-    );
+    const data = await cartItemService.getCartItems({
+      userId: req.user!.id,
+      filters: CartItemQuerySchema.parse(req.query),
+    });
 
     res.status(200).json({ success: true, data });
   } catch (error) {
@@ -21,10 +21,15 @@ export const getCartItems: Controller = async (req, res, next) => {
 
 export const addToCart: Controller = async (req, res, next) => {
   try {
-    const cart_item = await cartItemService.addToCart(
-      req.user!.id,
-      req.body as AddToCartBody,
-    );
+    const { product_id, quantity } = req.body as AddToCartBody;
+
+    const cart_item = await cartItemService.addToCart({
+      userId: req.user!.id,
+      payload: {
+        productId: product_id,
+        quantity,
+      },
+    });
 
     res
       .status(201)
@@ -36,10 +41,10 @@ export const addToCart: Controller = async (req, res, next) => {
 
 export const getCartItemById: Controller = async (req, res, next) => {
   try {
-    const cart_item = await cartItemService.getCartItemById(
-      req.user!.id,
-      req.params.productId as string,
-    );
+    const cart_item = await cartItemService.getCartItemById({
+      userId: req.user!.id,
+      productId: req.params.productId as string,
+    });
 
     res.status(200).json({ success: true, data: { cart_item } });
   } catch (error) {
@@ -49,11 +54,11 @@ export const getCartItemById: Controller = async (req, res, next) => {
 
 export const updateItemQuantity: Controller = async (req, res, next) => {
   try {
-    const cart_item = await cartItemService.updateItemQuantity(
-      req.user!.id,
-      req.params.productId as string,
-      req.body as UpdateCartItemBody,
-    );
+    const cart_item = await cartItemService.updateItemQuantity({
+      userId: req.user!.id,
+      productId: req.params.productId as string,
+      payload: req.body as UpdateCartItemBody,
+    });
 
     res.status(200).json({
       success: true,
@@ -67,10 +72,10 @@ export const updateItemQuantity: Controller = async (req, res, next) => {
 
 export const removeFromCart: Controller = async (req, res, next) => {
   try {
-    await cartItemService.removeFromCart(
-      req.user!.id,
-      req.params.productId as string,
-    );
+    await cartItemService.removeFromCart({
+      userId: req.user!.id,
+      productId: req.params.productId as string,
+    });
 
     res.status(200).json({ success: true, message: "Item removed from cart" });
   } catch (error) {

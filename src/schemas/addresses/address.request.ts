@@ -25,7 +25,7 @@ export const AddressBaseBodySchema = z.object({
   province: ProvinceSchema,
   city: CitySchema,
   barangay: BarangaySchema,
-  address_line: AddressLineSchema,
+  addressLine: AddressLineSchema,
 });
 
 export const CreateAddressBodySchema = AddressBaseBodySchema;

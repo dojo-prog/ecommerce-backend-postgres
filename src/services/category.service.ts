@@ -1,19 +1,23 @@
-import {
-  Category,
-  CategoryQuery,
-  CreateCategoryBody,
-  UpdateCategoryBody,
-} from "../schemas/categories";
+import { Category } from "../schemas/categories";
 import generateSlug from "../utils/generateSlug";
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
+import {
+  CreateCategoryParams,
+  DeleteCategoryParams,
+  GetCategoriesParams,
+  GetCategoriesResult,
+  GetCategoryBySlugParams,
+  UpdateCategoryParams,
+} from "../types/entities/category.types";
 
 import * as categoryRepository from "../repositories/category.repository";
-import { GetCategoriesResult } from "../types/entities/category.types";
 
 export const getCategories = async (
-  filters: CategoryQuery,
+  params: GetCategoriesParams,
 ): Promise<GetCategoriesResult> => {
+  const { filters } = params;
+
   const { categories, total } = await categoryRepository.find(filters);
 
   const { page, limit } = filters;
@@ -30,16 +34,20 @@ export const getCategories = async (
 };
 
 export const createCategory = async (
-  payload: CreateCategoryBody,
+  params: CreateCategoryParams,
 ): Promise<Category> => {
+  const { payload } = params;
+
   const slug = generateSlug(payload.name);
 
   return await categoryRepository.add({ ...payload, slug });
 };
 
 export const getCategoryBySlug = async (
-  categorySlug: string,
+  params: GetCategoryBySlugParams,
 ): Promise<Category> => {
+  const { categorySlug } = params;
+
   const category = await categoryRepository.findBySlug(categorySlug);
 
   if (!category) {
@@ -50,9 +58,10 @@ export const getCategoryBySlug = async (
 };
 
 export const updateCategory = async (
-  categoryId: string,
-  payload: UpdateCategoryBody,
+  params: UpdateCategoryParams,
 ): Promise<Category> => {
+  const { categoryId, payload } = params;
+
   const category = await categoryRepository.findById(categoryId);
 
   if (!category) {
@@ -69,7 +78,9 @@ export const updateCategory = async (
   return await categoryRepository.update(categoryId, new_values);
 };
 
-export const deleteCategory = async (categoryId: string) => {
+export const deleteCategory = async (params: DeleteCategoryParams) => {
+  const { categoryId } = params;
+
   const category = await categoryRepository.findById(categoryId);
 
   if (!category) {

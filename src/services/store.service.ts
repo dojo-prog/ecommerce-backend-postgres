@@ -2,15 +2,23 @@ import geocodeAddress from "../integrations/nominatim/geocoding";
 import { CreateStoreBody, Store, UpdateStoreBody } from "../schemas/stores";
 import AppError from "../utils/AppError";
 import generateChanges from "../utils/generateChanges";
+import {
+  CreateStoreParams,
+  UpdateStoreParams,
+  UpdateStoreResult,
+} from "../types/entities/store.types";
 
 import * as storeRepository from "../repositories/store.repository";
-import { UpdateStoreResult } from "../types/entities/store.types";
 
 export const getStoreDetails = async () => {
   return await storeRepository.find();
 };
 
-export const createStore = async (payload: CreateStoreBody): Promise<Store> => {
+export const createStore = async (
+  params: CreateStoreParams,
+): Promise<Store> => {
+  const { payload } = params;
+
   const existing = await storeRepository.find();
 
   if (existing) {
@@ -19,14 +27,19 @@ export const createStore = async (payload: CreateStoreBody): Promise<Store> => {
 
   const { name, ...address } = payload;
 
-  const { latitude, longitude } = await geocodeAddress(address);
+  const { latitude, longitude } = await geocodeAddress({
+    ...address,
+    address_line: address.addressLine,
+  });
 
   return await storeRepository.create({ ...payload, latitude, longitude });
 };
 
 export const updateStore = async (
-  payload: UpdateStoreBody,
+  params: UpdateStoreParams,
 ): Promise<UpdateStoreResult> => {
+  const { payload } = params;
+
   const store = await storeRepository.find();
 
   if (!store) {
@@ -35,15 +48,19 @@ export const updateStore = async (
 
   const { name, ...address } = payload;
 
-  const { latitude, longitude } = await geocodeAddress(address);
+  const { latitude, longitude } = await geocodeAddress({
+    ...address,
+    address_line: address.addressLine,
+  });
 
-  const finalPayload = {
+  const data: Partial<Store> = {
     ...payload,
+    address_line: address.addressLine,
     latitude,
     longitude,
   };
 
-  const { old_values, new_values } = generateChanges(store, finalPayload);
+  const { old_values, new_values } = generateChanges(store, data);
 
   const updated = await storeRepository.update(store.id, new_values);
 

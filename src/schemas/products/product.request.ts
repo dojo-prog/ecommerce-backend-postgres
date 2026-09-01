@@ -48,14 +48,14 @@ export const ProductQuerySchema = z
 // =======================================
 
 const ProductBaseBodySchema = z.object({
-  subcategory_id: UUIDSchema,
+  subcategoryId: UUIDSchema,
   name: ProductNameSchema,
   description: ProductDescriptionSchema,
-  price_cents: PriceCentsSchema,
+  priceCents: PriceCentsSchema,
   currency: CurrencySchema.optional().default("PHP"),
-  weight_grams: WeightGramsSchema,
+  weightGrams: WeightGramsSchema,
   is_active: IsActiveSchema.optional(),
-  initial_quantity: NonNegativeIntSchema.optional(),
+  initialQuantity: NonNegativeIntSchema.optional(),
 });
 
 export const CreateProductBodySchema = ProductBaseBodySchema;

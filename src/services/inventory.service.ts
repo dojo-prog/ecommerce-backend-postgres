@@ -2,6 +2,11 @@ import { ProductWithRelations } from "../schemas/products";
 import { findById as findProductById } from "../repositories/product.repository";
 import AppError from "../utils/AppError";
 import { Inventory } from "../schemas/inventories";
+import {
+  AddInventoryStockParams,
+  GetProductInventoryParams,
+  UpdateProductInventoryParams,
+} from "../types/entities/inventory.types";
 
 import * as inventoryRepository from "../repositories/inventory.repository";
 
@@ -10,9 +15,10 @@ import * as inventoryRepository from "../repositories/inventory.repository";
 // =======================================
 
 export const addInventoryStock = async (
-  productId: string,
-  quantity: number,
+  params: AddInventoryStockParams,
 ): Promise<ProductWithRelations> => {
+  const { productId, quantity } = params;
+
   const product = await findProductById(productId);
 
   if (!product) {
@@ -33,9 +39,10 @@ export const addInventoryStock = async (
 };
 
 export const updateProductInventory = async (
-  productId: string,
-  newQuantity: number,
+  params: UpdateProductInventoryParams,
 ): Promise<ProductWithRelations> => {
+  const { productId, newQuantity } = params;
+
   const product = await findProductById(productId);
 
   if (!product) {
@@ -60,8 +67,10 @@ export const updateProductInventory = async (
 };
 
 export const getInventoryById = async (
-  productId: string,
+  params: GetProductInventoryParams,
 ): Promise<Inventory> => {
+  const { productId } = params;
+
   const inventory = await inventoryRepository.findById(productId);
 
   if (!inventory) {

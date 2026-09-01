@@ -1,25 +1,27 @@
-import {
-  CreateProductBody,
-  ProductQuery,
-  ProductWithRelations,
-  UpdateProductBody,
-} from "../schemas/products";
+import { Product, ProductWithRelations } from "../schemas/products";
 import { createInventory } from "../services/inventory.service";
 import AppError from "../utils/AppError";
 import { uploadMulterImage } from "../integrations/cloudinary/upload";
 import generateChanges from "../utils/generateChanges";
 import { deleteImage } from "../integrations/cloudinary/delete";
-
-import * as productRepository from "../repositories/product.repository";
 import {
   CreateProductData,
+  CreateProductParams,
+  DeleteProductParams,
+  GetProductParams,
+  GetProductsParams,
   GetProductsResult,
+  UpdateProductParams,
   UpdateProductResult,
 } from "../types/entities/product.types";
 
+import * as productRepository from "../repositories/product.repository";
+
 export const getProducts = async (
-  filters: ProductQuery,
+  params: GetProductsParams,
 ): Promise<GetProductsResult> => {
+  const { filters } = params;
+
   const { products, total } = await productRepository.find(filters);
 
   const { page, limit } = filters;
@@ -36,19 +38,25 @@ export const getProducts = async (
 };
 
 export const createProduct = async (
-  payload: CreateProductBody,
-  thumbnail?: Express.Multer.File,
+  params: CreateProductParams,
 ): Promise<ProductWithRelations> => {
+  const { payload, thumbnail } = params;
+
   const existing = await productRepository.findByName(payload.name);
 
   if (existing) {
     throw new AppError(400, `A product named ${payload.name} already exists`);
   }
 
-  const { initial_quantity, ...rest } = payload;
+  const { initialQuantity: initial_quantity, ...rest } = payload;
+  const { subcategoryId, priceCents, weightGrams, isActive } = rest;
 
   const finalPayload: CreateProductData = {
     ...rest,
+    subcategory_id: subcategoryId,
+    price_cents: priceCents,
+    weight_grams: weightGrams,
+    is_active: isActive,
   };
 
   if (thumbnail) {
@@ -68,11 +76,13 @@ export const createProduct = async (
     initial_quantity !== undefined ? initial_quantity : 0,
   );
 
-  return await productRepository.findById(product.id);
+  return await productRepository.findWithRelationsById(product.id);
 };
 
-export const getProductById = async (productId: string) => {
-  const product = await productRepository.findById(productId);
+export const getProductById = async (params: GetProductParams) => {
+  const { productId } = params;
+
+  const product = await productRepository.findWithRelationsById(productId);
 
   if (!product) {
     throw new AppError(404, "Product not found");
@@ -82,17 +92,27 @@ export const getProductById = async (productId: string) => {
 };
 
 export const updateProduct = async (
-  productId: string,
-  payload: UpdateProductBody,
-  thumbnail?: Express.Multer.File,
+  params: UpdateProductParams,
 ): Promise<UpdateProductResult> => {
+  const { productId, payload, thumbnail } = params;
+
   const product = await productRepository.findById(productId);
 
   if (!product) {
     throw new AppError(404, "Product not found");
   }
 
-  const { old_values, new_values } = generateChanges(product, payload);
+  const { subcategoryId, priceCents, weightGrams, isActive } = payload;
+
+  const mod: Partial<Product> = {
+    ...payload,
+    subcategory_id: subcategoryId,
+    price_cents: priceCents,
+    weight_grams: weightGrams,
+    is_active: isActive,
+  };
+
+  const { old_values, new_values } = generateChanges(product, mod, false);
 
   // Existing name check
   if (new_values.name) {
@@ -125,7 +145,11 @@ export const updateProduct = async (
     }
   }
 
-  const updated = await productRepository.findById(productId);
+  if (Object.keys(new_values).length === 0) {
+    throw new AppError(400, "No changes have been made");
+  }
+
+  const updated = await productRepository.findWithRelationsById(productId);
 
   return {
     product: updated,
@@ -135,9 +159,11 @@ export const updateProduct = async (
 };
 
 export const deleteProduct = async (
-  productId: string,
+  params: DeleteProductParams,
 ): Promise<ProductWithRelations> => {
-  const product = await productRepository.findById(productId);
+  const { productId } = params;
+
+  const product = await productRepository.findWithRelationsById(productId);
 
   if (!product) {
     throw new AppError(404, "Product not found");

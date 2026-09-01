@@ -4,10 +4,10 @@ import { OrderQuerySchema } from "../schemas/orders";
 
 export const getUserOrders: Controller = async (req, res, next) => {
   try {
-    const orders = await orderService.getUserOrders(
-      req.user!.id,
-      OrderQuerySchema.parse(req.query),
-    );
+    const orders = await orderService.getUserOrders({
+      userId: req.user!.id,
+      filters: OrderQuerySchema.parse(req.query),
+    });
 
     res.status(200).json({ success: true, data: { orders } });
   } catch (error) {
@@ -17,10 +17,10 @@ export const getUserOrders: Controller = async (req, res, next) => {
 
 export const getUserOrderById: Controller = async (req, res, next) => {
   try {
-    const order = await orderService.getUserOrderById(
-      req.user!.id,
-      req.params.orderId as string,
-    );
+    const order = await orderService.getUserOrderById({
+      userId: req.user!.id,
+      orderId: req.params.orderId as string,
+    });
 
     res.status(200).json({ success: true, data: { order } });
   } catch (error) {
@@ -30,10 +30,10 @@ export const getUserOrderById: Controller = async (req, res, next) => {
 
 export const checkout: Controller = async (req, res, next) => {
   try {
-    const order = await orderService.checkout(
-      req.user!.id,
-      req.body.address_id,
-    );
+    const order = await orderService.checkout({
+      userId: req.user!.id,
+      addressId: req.body.address_id,
+    });
 
     res
       .status(200)

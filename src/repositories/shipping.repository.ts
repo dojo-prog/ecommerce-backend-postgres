@@ -1,8 +1,9 @@
 import { PoolClient } from "pg";
 import pool from "../database/db";
-import { CreateShippingBody, Shipping } from "../schemas/shippings";
+import { Shipping } from "../schemas/shippings";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
+import { CreateShippingData } from "../types/entities/shipping.types";
 
 export const find = async (client?: PoolClient): Promise<Shipping> => {
   const conn = client ? client : pool;
@@ -16,10 +17,8 @@ export const find = async (client?: PoolClient): Promise<Shipping> => {
   return rows[0];
 };
 
-export const create = async (
-  payload: CreateShippingBody,
-): Promise<Shipping> => {
-  const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
+export const create = async (data: CreateShippingData): Promise<Shipping> => {
+  const { columnsStr, placeholdersStr, values } = buildInsertQueries(data);
 
   const { rows } = await pool.query(
     `

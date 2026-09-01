@@ -16,8 +16,8 @@ export const ShippingParamsSchema = z.object({
 
 const ShippingBaseBodySchema = z.object({
   name: ShippingNameSchema,
-  base_fee_cents: DecimalSchema,
-  fee_per_km_cents: DecimalSchema,
+  baseFeeCents: DecimalSchema,
+  feePerKmCents: DecimalSchema,
 });
 
 export const CreateShippingBodySchema = ShippingBaseBodySchema;

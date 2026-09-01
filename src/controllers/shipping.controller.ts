@@ -14,9 +14,9 @@ export const getShippingDetails: Controller = async (req, res, next) => {
 
 export const createShipping: Controller = async (req, res, next) => {
   try {
-    const shipping = await shippingService.createShipping(
-      req.body as CreateShippingBody,
-    );
+    const shipping = await shippingService.createShipping({
+      payload: req.body as CreateShippingBody,
+    });
 
     res.status(201).json({
       success: true,
@@ -30,9 +30,9 @@ export const createShipping: Controller = async (req, res, next) => {
 
 export const updateShipping: Controller = async (req, res, next) => {
   try {
-    const data = await shippingService.updateShipping(
-      req.body as UpdateShippingBody,
-    );
+    const data = await shippingService.updateShipping({
+      payload: req.body as UpdateShippingBody,
+    });
 
     res
       .status(200)

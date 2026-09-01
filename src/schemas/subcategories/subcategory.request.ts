@@ -38,7 +38,9 @@ export const SubcategoryBaseBodySchema = z.object({
 
 export const CreateSubcategoryBodySchema = SubcategoryBaseBodySchema;
 
-export const UpdateSubcategoryBodySchema = SubcategoryBaseBodySchema;
+export const UpdateSubcategoryBodySchema = SubcategoryBaseBodySchema.extend({
+  categoryId: UUIDSchema,
+});
 
 // =======================================
 // TYPES

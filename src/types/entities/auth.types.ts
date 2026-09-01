@@ -1,8 +1,8 @@
+import { UserPublic, UserRole } from "../../schemas/users";
+
 // =======================================
 // AUTH TOKENS PAYLOAD
 // =======================================
-
-import { UserPublic, UserRole } from "../../schemas/users";
 
 export interface AccessTokenPayload {
   id: string;
@@ -10,6 +10,35 @@ export interface AccessTokenPayload {
 }
 
 export type RefreshTokenPayload = Omit<AccessTokenPayload, "role">;
+
+// =======================================
+// SERVICE PARAMS
+// =======================================
+
+export interface RegisterParams {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginParams {
+  email: string;
+  password: string;
+}
+
+export interface RefreshAccessTokenParams {
+  refreshToken: string;
+}
+
+// =======================================
+// REPOSITORY DATA
+// =======================================
+
+export interface RegisterData {
+  username: string;
+  email: string;
+  password_hash: string;
+}
 
 // =======================================
 // RESULT

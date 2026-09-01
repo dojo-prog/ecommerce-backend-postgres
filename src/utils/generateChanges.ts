@@ -8,6 +8,7 @@ interface GenerateChangesResult<T extends object> {
 const generateChanges = <T extends object>(
   original: T,
   modified: Partial<T>,
+  throwOnNoChanges = true,
 ): GenerateChangesResult<T> => {
   const old_values: Partial<T> = {};
   const new_values: Partial<T> = {};
@@ -23,8 +24,10 @@ const generateChanges = <T extends object>(
     }
   }
 
-  if (Object.keys(new_values).length === 0) {
-    throw new AppError(400, "No changes have been made");
+  if (throwOnNoChanges) {
+    if (Object.keys(new_values).length === 0) {
+      throw new AppError(400, "No changes have been made");
+    }
   }
 
   return {

@@ -11,14 +11,21 @@ import generateSlug from "../utils/generateSlug";
 import * as subcategoryRepository from "../repositories/subcategory.repository";
 import * as categoryRepository from "../repositories/category.repository";
 import {
+  CreateSubcategoryData,
+  CreateSubcategoryParams,
+  DeleteSubcategoryParams,
+  GetSubcategoriesParams,
   GetSubcategoriesResult,
+  GetSubcategoryBySlugParams,
+  UpdateSubcategoryParams,
   UpdateSubcategoryResult,
 } from "../types/entities/subcategory.types";
 
 export const getSubcategories = async (
-  categorySlug: string,
-  filters: SubcategoryQuery,
+  params: GetSubcategoriesParams,
 ): Promise<GetSubcategoriesResult> => {
+  const { categorySlug, filters } = params;
+
   const category = await categoryRepository.findBySlug(categorySlug);
 
   if (!category) {
@@ -44,10 +51,11 @@ export const getSubcategories = async (
 };
 
 export const createSubcategory = async (
-  categoryId: string,
-  payload: CreateSubcategoryBody,
+  params: CreateSubcategoryParams,
 ): Promise<Subcategory> => {
-  const { name } = payload;
+  const { payload } = params;
+
+  const { categoryId, name } = payload;
 
   const existing = await subcategoryRepository.findByName(categoryId, name);
 
@@ -60,17 +68,20 @@ export const createSubcategory = async (
 
   const slug = generateSlug(name);
 
-  return await subcategoryRepository.add({
-    category_id: categoryId,
+  const data: CreateSubcategoryData = {
     ...payload,
+    category_id: categoryId,
     slug,
-  });
+  };
+
+  return await subcategoryRepository.add(data);
 };
 
 export const getSubcategoryBySlug = async (
-  categorySlug: string,
-  subcategorySlug: string,
+  params: GetSubcategoryBySlugParams,
 ): Promise<Subcategory> => {
+  const { categorySlug, subcategorySlug } = params;
+
   const subcategory = await subcategoryRepository.findBySlug(
     categorySlug,
     subcategorySlug,
@@ -84,10 +95,10 @@ export const getSubcategoryBySlug = async (
 };
 
 export const updateSubcategory = async (
-  categoryId: string,
-  subcategoryId: string,
-  payload: UpdateCategoryBody,
+  params: UpdateSubcategoryParams,
 ): Promise<UpdateSubcategoryResult> => {
+  const { categoryId, subcategoryId, payload } = params;
+
   const subcategory = await subcategoryRepository.findById(
     categoryId,
     subcategoryId,
@@ -97,7 +108,12 @@ export const updateSubcategory = async (
     throw new AppError(404, "Subcategory not found");
   }
 
-  const { old_values, new_values } = generateChanges(subcategory, payload);
+  const mod: Partial<Subcategory> = {
+    ...payload,
+    category_id: categoryId,
+  };
+
+  const { old_values, new_values } = generateChanges(subcategory, mod);
 
   if (new_values.name) {
     new_values.slug = generateSlug(new_values.name as string);
@@ -118,9 +134,10 @@ export const updateSubcategory = async (
 };
 
 export const deleteSubcategory = async (
-  categoryId: string,
-  subcategoryId: string,
+  params: DeleteSubcategoryParams,
 ): Promise<Subcategory> => {
+  const { categoryId, subcategoryId } = params;
+
   const subcategory = await subcategoryRepository.findById(
     categoryId,
     subcategoryId,

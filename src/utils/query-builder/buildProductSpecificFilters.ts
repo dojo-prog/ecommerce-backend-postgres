@@ -1,4 +1,4 @@
-import { ProductSpecificQueryPayload } from "../../schemas/products";
+import { ProductSpecificQuery } from "../../schemas/products";
 
 interface BuildProductSpecificFiltersResult {
   conditions: string[];
@@ -6,7 +6,7 @@ interface BuildProductSpecificFiltersResult {
 }
 
 const buildProductSpecificFilters = (
-  specificFilters: ProductSpecificQueryPayload,
+  specificFilters: ProductSpecificQuery,
 ): BuildProductSpecificFiltersResult => {
   const { category, minPrice, maxPrice, inStock } = specificFilters;
 

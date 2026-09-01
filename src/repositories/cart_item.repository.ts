@@ -4,13 +4,10 @@ import {
   CART_ITEM_JOINS,
   CART_ITEM_RELATIONS_PROJECTION,
 } from "../database/queries/cart_items";
-import {
-  AddToCartBody,
-  CartItemQuery,
-  CartItemWithRelations,
-} from "../schemas/cart_items";
+import { CartItemQuery, CartItemWithRelations } from "../schemas/cart_items";
 import buildFilterQueries from "../utils/query-builder/buildFilterQueries";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
+import { AddToCartData } from "../types/entities/cart_item.types";
 
 export const find = async (
   userId: string,
@@ -84,9 +81,9 @@ export const findById = async (
 
 export const add = async (
   userId: string,
-  payload: AddToCartBody & { cart_id: string },
+  data: AddToCartData,
 ): Promise<CartItemWithRelations> => {
-  const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
+  const { columnsStr, placeholdersStr, values } = buildInsertQueries(data);
 
   await pool.query(
     `
@@ -96,7 +93,7 @@ export const add = async (
     values,
   );
 
-  return await findById(userId, payload.product_id);
+  return await findById(userId, data.product_id);
 };
 
 export const update = async (

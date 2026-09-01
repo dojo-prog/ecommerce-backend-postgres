@@ -1,5 +1,6 @@
 import pool from "../database/db";
-import { CreateAddressBody, UserAddress } from "../schemas/addresses";
+import { UserAddress } from "../schemas/addresses";
+import { CreateAddressData } from "../types/entities/address.types";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
 import buildUpdateQueries from "../utils/query-builder/buildUpdateQueries";
 
@@ -31,8 +32,8 @@ export const findById = async (
   return rows[0];
 };
 
-export const add = async (payload: CreateAddressBody & { user_id: string }) => {
-  const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
+export const add = async (data: CreateAddressData) => {
+  const { columnsStr, placeholdersStr, values } = buildInsertQueries(data);
 
   const { rows } = await pool.query(
     `

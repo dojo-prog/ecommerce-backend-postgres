@@ -3,9 +3,9 @@ import {
   USER_PUBLIC_PROJECTION,
 } from "../database/queries/users";
 import pool from "../database/db";
-import { RegisterBody } from "../schemas/auth";
 import { UserPrivate, UserPublic } from "../schemas/users";
 import buildInsertQueries from "../utils/query-builder/buildInsertQueries";
+import { RegisterData } from "../types/entities/auth.types";
 
 export const findById = async (userId: string): Promise<UserPublic> => {
   const result = await pool.query(
@@ -61,10 +61,8 @@ export const findPrivateByEmail = async (
   return result.rows[0];
 };
 
-export const register = async (
-  payload: Partial<RegisterBody> & { password_hash: string },
-): Promise<UserPublic> => {
-  const { columnsStr, placeholdersStr, values } = buildInsertQueries(payload);
+export const register = async (data: RegisterData): Promise<UserPublic> => {
+  const { columnsStr, placeholdersStr, values } = buildInsertQueries(data);
 
   const result = await pool.query(
     `

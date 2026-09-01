@@ -1,5 +1,5 @@
-import { CreatePaymentPayload } from "../../schemas/payments";
 import * as paymentModel from "../../repositories/payment.repository";
+import { CreatePaymentData } from "../../types/entities/payment.types";
 
 export const processPayment = async (
   orderId: string,
@@ -8,7 +8,7 @@ export const processPayment = async (
 ) => {
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  const payload: Partial<CreatePaymentPayload> = {
+  const payload: Partial<CreatePaymentData> = {
     order_id: orderId,
     amount_cents: amountCents,
     transaction_id: crypto.randomUUID(),
@@ -19,7 +19,7 @@ export const processPayment = async (
   if (shouldFail) {
     payload.status = "failed";
 
-    await paymentModel.create(payload as CreatePaymentPayload);
+    await paymentModel.create(payload as CreatePaymentData);
 
     return {
       success: false,
@@ -29,7 +29,7 @@ export const processPayment = async (
 
   payload.status = "successful";
 
-  await paymentModel.create(payload as CreatePaymentPayload);
+  await paymentModel.create(payload as CreatePaymentData);
 
   return {
     success: true,

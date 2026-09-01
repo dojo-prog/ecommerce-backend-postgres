@@ -8,9 +8,9 @@ import {
 
 export const getCategories: Controller = async (req, res, next) => {
   try {
-    const data = await categoryService.getCategories(
-      CategoryQuerySchema.parse(req.query),
-    );
+    const data = await categoryService.getCategories({
+      filters: CategoryQuerySchema.parse(req.query),
+    });
 
     res.status(200).json({ success: true, data });
   } catch (error) {
@@ -20,9 +20,9 @@ export const getCategories: Controller = async (req, res, next) => {
 
 export const createCategory: Controller = async (req, res, next) => {
   try {
-    const category = await categoryService.createCategory(
-      req.body as CreateCategoryBody,
-    );
+    const category = await categoryService.createCategory({
+      payload: req.body as CreateCategoryBody,
+    });
 
     res
       .status(201)
@@ -34,9 +34,9 @@ export const createCategory: Controller = async (req, res, next) => {
 
 export const getCategoryBySlug: Controller = async (req, res, next) => {
   try {
-    const category = await categoryService.getCategoryBySlug(
-      req.params.categorySlug as string,
-    );
+    const category = await categoryService.getCategoryBySlug({
+      categorySlug: req.params.categorySlug as string,
+    });
 
     res.status(200).json({ success: true, data: { category } });
   } catch (error) {
@@ -46,10 +46,10 @@ export const getCategoryBySlug: Controller = async (req, res, next) => {
 
 export const updateCategory: Controller = async (req, res, next) => {
   try {
-    const data = await categoryService.updateCategory(
-      req.params.categoryId as string,
-      req.body as UpdateCategoryBody,
-    );
+    const data = await categoryService.updateCategory({
+      categoryId: req.params.categoryId as string,
+      payload: req.body as UpdateCategoryBody,
+    });
 
     res.status(200).json({ success: true, message: "Category updated", data });
   } catch (error) {
@@ -59,9 +59,9 @@ export const updateCategory: Controller = async (req, res, next) => {
 
 export const deleteCategory: Controller = async (req, res, next) => {
   try {
-    const category = await categoryService.deleteCategory(
-      req.params.categoryId as string,
-    );
+    const category = await categoryService.deleteCategory({
+      categoryId: req.params.categoryId as string,
+    });
 
     res
       .status(200)

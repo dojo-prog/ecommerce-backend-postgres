@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 import { OrderItem } from "../schemas/order_items";
+import { CreateOrderItemData } from "../types/entities/order_item.types";
 
 import * as orderItemRepository from "../repositories/order_item.repository";
-import { CreateOrderItemData } from "../types/entities/order_item.types";
 
 export const createOrderItem = async (
   client: PoolClient,

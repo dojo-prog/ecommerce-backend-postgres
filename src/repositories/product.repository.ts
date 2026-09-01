@@ -55,7 +55,19 @@ export const find = async (
   };
 };
 
-export const findById = async (
+export const findById = async (productId: string) => {
+  const { rows } = await pool.query(
+    `
+    SELECT * FROM products
+    WHERE id = $1
+    `,
+    [productId],
+  );
+
+  return rows[0];
+};
+
+export const findWithRelationsById = async (
   productId: string,
 ): Promise<ProductWithRelations> => {
   const { rows } = await pool.query(
@@ -121,7 +133,7 @@ export const update = async (
     values,
   );
 
-  return await findById(productId);
+  return await findWithRelationsById(productId);
 };
 
 export const remove = async (productId: string): Promise<void> => {

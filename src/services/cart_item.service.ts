@@ -1,15 +1,17 @@
-import {
-  AddToCartBody,
-  CartItemQuery,
-  CartItemWithRelations,
-  UpdateCartItemBody,
-} from "../schemas/cart_items";
+import { CartItemWithRelations } from "../schemas/cart_items";
 import AppError from "../utils/AppError";
+import {
+  AddToCartParams,
+  GetCartItemParams,
+  GetCartItemsParams,
+  GetCartItemsResult,
+  RemoveFromCartParams,
+  UpdateItemQuantityParams,
+} from "../types/entities/cart_item.types";
 
 import * as cartItemRepository from "../repositories/cart_item.repository";
 import * as productRepository from "../repositories/product.repository.js";
 import * as cartService from "../services/cart.service";
-import { GetCartItemsResult } from "../types/entities/cart_item.types";
 
 // =======================================
 // HELPER
@@ -29,9 +31,10 @@ const checkQuantity = (stockQuantity: number, requestedQuantity: number) => {
 // =======================================
 
 export const getCartItems = async (
-  userId: string,
-  filters: CartItemQuery,
+  params: GetCartItemsParams,
 ): Promise<GetCartItemsResult> => {
+  const { userId, filters } = params;
+
   const { cart_items, total } = await cartItemRepository.find(userId, filters);
 
   const { page, limit } = filters;
@@ -48,12 +51,12 @@ export const getCartItems = async (
 };
 
 export const addToCart = async (
-  userId: string,
-  payload: AddToCartBody,
+  params: AddToCartParams,
 ): Promise<CartItemWithRelations> => {
-  const { product_id } = payload;
+  const { userId, payload } = params;
+  const { productId, quantity } = payload;
 
-  const product = await productRepository.findById(product_id);
+  const product = await productRepository.findWithRelationsById(productId);
 
   if (!product) {
     throw new AppError(400, "Product not found");
@@ -67,24 +70,32 @@ export const addToCart = async (
 
   const cart = await cartService.getOrCreateCart(userId);
 
-  const existing = await cartItemRepository.findById(userId, product_id);
+  const existing = await cartItemRepository.findById(userId, productId);
 
   if (existing) {
-    const newQuantity = existing.quantity + payload.quantity;
+    const newQuantity = existing.quantity + quantity;
 
     checkQuantity(stock_quantity, newQuantity);
 
-    return await cartItemRepository.update(userId, product_id, {
+    return await cartItemRepository.update(userId, productId, {
       quantity: newQuantity,
     });
   }
 
-  checkQuantity(product.stock_quantity, payload.quantity);
+  checkQuantity(product.stock_quantity, quantity);
 
-  return await cartItemRepository.add(userId, { ...payload, cart_id: cart.id });
+  const data = {
+    ...payload,
+    product_id: productId,
+    cart_id: cart.id,
+  };
+
+  return await cartItemRepository.add(userId, data);
 };
 
-export const getCartItemById = async (userId: string, productId: string) => {
+export const getCartItemById = async (params: GetCartItemParams) => {
+  const { userId, productId } = params;
+
   const cartItem = await cartItemRepository.findById(userId, productId);
 
   if (!cartItem) {
@@ -95,11 +106,11 @@ export const getCartItemById = async (userId: string, productId: string) => {
 };
 
 export const updateItemQuantity = async (
-  userId: string,
-  productId: string,
-  payload: UpdateCartItemBody,
+  params: UpdateItemQuantityParams,
 ): Promise<CartItemWithRelations | void> => {
-  const product = await productRepository.findById(productId);
+  const { userId, productId, payload } = params;
+
+  const product = await productRepository.findWithRelationsById(productId);
 
   if (!product) {
     throw new AppError(400, "Product not found");
@@ -127,9 +138,10 @@ export const updateItemQuantity = async (
 };
 
 export const removeFromCart = async (
-  userId: string,
-  productId: string,
+  params: RemoveFromCartParams,
 ): Promise<void> => {
+  const { userId, productId } = params;
+
   const cartItem = await cartItemRepository.findById(userId, productId);
 
   if (!cartItem) {

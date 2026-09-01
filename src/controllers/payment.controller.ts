@@ -3,11 +3,11 @@ import * as paymentService from "../services/payment.service";
 
 export const payOrder: Controller = async (req, res, next) => {
   try {
-    const order = await paymentService.payOrder(
-      req.user!.id,
-      req.params.orderId as string,
-      req.body?.shouldFail ?? false,
-    );
+    const order = await paymentService.payOrder({
+      userId: req.user!.id,
+      orderId: req.params.orderId as string,
+      shouldFail: req.body?.shouldFail ?? false,
+    });
 
     const success = order.status === "paid";
 
@@ -21,9 +21,9 @@ export const payOrder: Controller = async (req, res, next) => {
 
 export const getPaymentByOrderId: Controller = async (req, res, next) => {
   try {
-    const payment = await paymentService.getPaymentByOrderId(
-      req.params.orderId as string,
-    );
+    const payment = await paymentService.getPaymentByOrderId({
+      orderId: req.params.orderId as string,
+    });
 
     res.status(200).json({ success: true, data: { payment } });
   } catch (error) {
@@ -33,9 +33,9 @@ export const getPaymentByOrderId: Controller = async (req, res, next) => {
 
 export const getPaymentById: Controller = async (req, res, next) => {
   try {
-    const payment = await paymentService.getPaymentById(
-      req.params.paymentId as string,
-    );
+    const payment = await paymentService.getPaymentById({
+      paymentId: req.params.paymentId as string,
+    });
 
     res.status(200).json({ success: true, data: { payment } });
   } catch (error) {

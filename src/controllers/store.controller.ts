@@ -14,7 +14,9 @@ export const getStoreDetails: Controller = async (req, res, next) => {
 
 export const createStore: Controller = async (req, res, next) => {
   try {
-    const store = await storeService.createStore(req.body as CreateStoreBody);
+    const store = await storeService.createStore({
+      payload: req.body as CreateStoreBody,
+    });
 
     res
       .status(201)
@@ -26,7 +28,9 @@ export const createStore: Controller = async (req, res, next) => {
 
 export const updateStore: Controller = async (req, res, next) => {
   try {
-    const data = await storeService.updateStore(req.body as UpdateStoreBody);
+    const data = await storeService.updateStore({
+      payload: req.body as UpdateStoreBody,
+    });
 
     res.status(200).json({ success: true, message: "Store updated", data });
   } catch (error) {

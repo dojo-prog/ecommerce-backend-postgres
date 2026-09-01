@@ -1,6 +1,24 @@
 import { PaymentStatus, PaymentProvider } from "../../schemas/payments";
 
 // =======================================
+// SERVICE PARAMS
+// =======================================
+
+export interface PayOrderParams {
+  userId: string;
+  orderId: string;
+  shouldFail?: boolean;
+}
+
+export interface GetPaymentParams {
+  paymentId: string;
+}
+
+export interface GetPaymentByOrderParams {
+  orderId: string;
+}
+
+// =======================================
 // REPOSITORY DATA
 // =======================================
 

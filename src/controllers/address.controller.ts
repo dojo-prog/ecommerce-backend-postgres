@@ -4,7 +4,9 @@ import { CreateAddressBody, UpdateAddressBody } from "../schemas/addresses";
 
 export const getUserAddresses: Controller = async (req, res, next) => {
   try {
-    const addresses = await addressService.getUserAddresses(req.user!.id);
+    const addresses = await addressService.getUserAddresses({
+      userId: req.user!.id,
+    });
 
     res.status(200).json({ success: true, data: { addresses } });
   } catch (error) {
@@ -14,10 +16,10 @@ export const getUserAddresses: Controller = async (req, res, next) => {
 
 export const createAddress: Controller = async (req, res, next) => {
   try {
-    const address = await addressService.createAddress(
-      req.user!.id,
-      req.body as CreateAddressBody,
-    );
+    const address = await addressService.createAddress({
+      userId: req.user!.id,
+      payload: req.body as CreateAddressBody,
+    });
 
     res
       .status(201)
@@ -29,10 +31,10 @@ export const createAddress: Controller = async (req, res, next) => {
 
 export const getAddressById: Controller = async (req, res, next) => {
   try {
-    const address = await addressService.getAddressById(
-      req.user!.id,
-      req.params.addressId as string,
-    );
+    const address = await addressService.getAddressById({
+      userId: req.user!.id,
+      addressId: req.params.addressId as string,
+    });
 
     res.status(200).json({ success: true, data: { address } });
   } catch (error) {
@@ -42,11 +44,11 @@ export const getAddressById: Controller = async (req, res, next) => {
 
 export const updateAddress: Controller = async (req, res, next) => {
   try {
-    const address = await addressService.updateAddress(
-      req.user!.id,
-      req.params.addressId as string,
-      req.body as UpdateAddressBody,
-    );
+    const address = await addressService.updateAddress({
+      userId: req.user!.id,
+      addressId: req.params.addressId as string,
+      payload: req.body as UpdateAddressBody,
+    });
 
     res
       .status(200)
@@ -58,10 +60,10 @@ export const updateAddress: Controller = async (req, res, next) => {
 
 export const deleteAddress: Controller = async (req, res, next) => {
   try {
-    const address = await addressService.deleteAddress(
-      req.user!.id,
-      req.params.addressId as string,
-    );
+    const address = await addressService.deleteAddress({
+      userId: req.user!.id,
+      addressId: req.params.addressId as string,
+    });
 
     res
       .status(200)
@@ -73,10 +75,10 @@ export const deleteAddress: Controller = async (req, res, next) => {
 
 export const setToDefault: Controller = async (req, res, next) => {
   try {
-    const address = await addressService.setToDefault(
-      req.user!.id,
-      req.params.addressId as string,
-    );
+    const address = await addressService.setToDefault({
+      userId: req.user!.id,
+      addressId: req.params.addressId as string,
+    });
 
     res.status(200).json({
       success: true,
